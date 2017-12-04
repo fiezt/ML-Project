@@ -1,0 +1,5 @@
+#!/bin/bash
+pdflatex Tanner_Fiez_Project
+bibtex Tanner_Fiez_Project
+pdflatex Tanner_Fiez_Project
+pdflatex Tanner_Fiez_Project

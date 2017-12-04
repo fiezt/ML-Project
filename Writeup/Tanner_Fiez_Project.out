@@ -1,0 +1,20 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Risk-Sensitive Reinforcement Learning}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Algorithm}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Simulations}{section.2}% 4
+\BOOKMARK [1][-]{section.3}{New York Taxi Dataset}{}% 5
+\BOOKMARK [2][-]{subsection.3.1}{Data Description}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.2}{MDP Formulation for Taxi Drivers}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.3}{Data Preprocessing}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Future Work}{}% 9
+\BOOKMARK [1][-]{section.5}{Appendix}{}% 10
+\BOOKMARK [2][-]{subsection.5.1}{Risk-Sensitive Decision Making Example}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.2}{Risk-Sensitive Q-Learning Description}{section.5}% 12
+\BOOKMARK [2][-]{subsection.5.3}{Value Functions}{section.5}% 13
+\BOOKMARK [2][-]{subsection.5.4}{Further Simulation Results}{section.5}% 14
+\BOOKMARK [2][-]{subsection.5.5}{Taxi MDP Model Description}{section.5}% 15
+\BOOKMARK [3][-]{subsubsection.5.5.1}{State Space}{subsection.5.5}% 16
+\BOOKMARK [3][-]{subsubsection.5.5.2}{Action Space}{subsection.5.5}% 17
+\BOOKMARK [3][-]{subsubsection.5.5.3}{Transition Kernel}{subsection.5.5}% 18
+\BOOKMARK [3][-]{subsubsection.5.5.4}{Reward Function}{subsection.5.5}% 19
+\BOOKMARK [3][-]{subsubsection.5.5.5}{Initial State}{subsection.5.5}% 20
