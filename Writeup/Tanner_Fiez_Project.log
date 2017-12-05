@@ -1,9 +1,12 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  3 DEC 2017 11:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  4 DEC 2017 22:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**Tanner_Fiez_Project
-(./Tanner_Fiez_Project.tex
+**/Users/tfiez/Courses/CSE546/Project/Final_Project/Writeup/Tanner_Fiez_Project
+.tex
+
+(/Users/tfiez/Courses/CSE546/Project/Final_Project/Writeup/Tanner_Fiez_Project.
+tex
 LaTeX2e <2016/03/31>
 Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/article.cls
@@ -705,7 +708,101 @@ File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
 \Gin@req@height=\dimen146
 \Gin@req@width=\dimen147
 )
-(./Tanner_Fiez_Project.aux)
+(./Tanner_Fiez_Project.aux
+
+LaTeX Warning: Label `fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim1' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sim2' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim' multiply defined.
+
+
+LaTeX Warning: Label `fig:sim' multiply defined.
+
+)
 \openout1 = `Tanner_Fiez_Project.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
@@ -723,8 +820,7 @@ LaTeX Font Info:    ... okay on input line 53.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 53.
 LaTeX Font Info:    ... okay on input line 53.
 LaTeX Font Info:    Try loading font information for T1+ptm on input line 53.
-
-(/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/t1ptm.fd
+ (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/t1ptm.fd
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 )
 *geometry* driver: auto-detecting
@@ -895,62 +991,104 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 57.
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 70.
+
+Underfull \vbox (badness 2359) has occurred while \output is active []
+
  [1
 
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<../figs/Grid_World_Risk_Sensitive_QLearning_QValues.png, id=112, 1156.32pt x 1
-156.32pt>
-File: ../figs/Grid_World_Risk_Sensitive_QLearning_QValues.png Graphic file (typ
-e png)
- <use ../figs/Grid_World_Risk_Sensitive_QLearning_QValues.png>
-Package pdftex.def Info: ../figs/Grid_World_Risk_Sensitive_QLearning_QValues.pn
-g used on input line 88.
-(pdftex.def)             Requested size: 198.7425pt x 198.742pt.
+<../figs/prospect_neutral.png, id=116, 421.575pt x 277.035pt>
+File: ../figs/prospect_neutral.png Graphic file (type png)
 
-<../figs/Grid_World_Risk_Sensitive_QLearning_Values.png, id=114, 1156.32pt x 11
-56.32pt>
-File: ../figs/Grid_World_Risk_Sensitive_QLearning_Values.png Graphic file (type
- png)
- <use ../figs/Grid_World_Risk_Sensitive_QLearning_Values.png>
-Package pdftex.def Info: ../figs/Grid_World_Risk_Sensitive_QLearning_Values.png
- used on input line 89.
-(pdftex.def)             Requested size: 198.7425pt x 198.742pt.
- [2 <../figs/Grid_World_Risk_Sensitive_QLearning_QValues.png> <../figs/Grid_Wor
-ld_Risk_Sensitive_QLearning_Values.png>]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 101.
+<use ../figs/prospect_neutral.png>
+Package pdftex.def Info: ../figs/prospect_neutral.png used on input line 88.
+(pdftex.def)             Requested size: 198.7425pt x 130.60382pt.
+
+<../figs/prospect_low.png, id=118, 421.575pt x 277.035pt>
+File: ../figs/prospect_low.png Graphic file (type png)
+
+<use ../figs/prospect_low.png>
+Package pdftex.def Info: ../figs/prospect_low.png used on input line 89.
+(pdftex.def)             Requested size: 198.7425pt x 130.60382pt.
+
+<../figs/prospect_mid.png, id=119, 421.575pt x 277.035pt>
+File: ../figs/prospect_mid.png Graphic file (type png)
+
+<use ../figs/prospect_mid.png>
+Package pdftex.def Info: ../figs/prospect_mid.png used on input line 90.
+(pdftex.def)             Requested size: 198.7425pt x 130.60382pt.
+
+<../figs/prospect_high.png, id=120, 421.575pt x 277.035pt>
+File: ../figs/prospect_high.png Graphic file (type png)
+
+<use ../figs/prospect_high.png>
+Package pdftex.def Info: ../figs/prospect_high.png used on input line 91.
+(pdftex.def)             Requested size: 198.7425pt x 130.60382pt.
+
+<../figs/policy_neutral.png, id=121, 2312.64pt x 1445.4pt>
+File: ../figs/policy_neutral.png Graphic file (type png)
+
+<use ../figs/policy_neutral.png>
+Package pdftex.def Info: ../figs/policy_neutral.png used on input line 97.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/policy_low.png, id=122, 2312.64pt x 1445.4pt>
+File: ../figs/policy_low.png Graphic file (type png)
+
+<use ../figs/policy_low.png>
+Package pdftex.def Info: ../figs/policy_low.png used on input line 98.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/policy_mid.png, id=123, 2312.64pt x 1445.4pt>
+File: ../figs/policy_mid.png Graphic file (type png)
+
+<use ../figs/policy_mid.png>
+Package pdftex.def Info: ../figs/policy_mid.png used on input line 99.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/policy_high.png, id=124, 2312.64pt x 1445.4pt>
+File: ../figs/policy_high.png Graphic file (type png)
+
+<use ../figs/policy_high.png>
+Package pdftex.def Info: ../figs/policy_high.png used on input line 100.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+ [2 <../figs/policy_neutral.png> <../figs/policy_low.png> <../figs/policy_mid.p
+ng> <../figs/policy_high.png>]
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 112.
 
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 101.
-
-(./Tanner_Fiez_Project.bbl [3]) [4]
-<../figs/Episode_Returns.png, id=153, 421.575pt x 277.035pt>
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 112.
+ [3 <../figs/prospect_neutral.png> <../figs/prospect_low.png> <../figs/prospect
+_mid.png> <../figs/prospect_high.png>] (./Tanner_Fiez_Project.bbl) [4]
+<../figs/Episode_Returns.png, id=171, 421.575pt x 277.035pt>
 File: ../figs/Episode_Returns.png Graphic file (type png)
 
 <use ../figs/Episode_Returns.png>
-Package pdftex.def Info: ../figs/Episode_Returns.png used on input line 174.
+Package pdftex.def Info: ../figs/Episode_Returns.png used on input line 185.
 (pdftex.def)             Requested size: 131.17076pt x 86.19699pt.
 
-<../figs/Epsilon_Parameters.png, id=154, 421.575pt x 277.035pt>
+<../figs/Epsilon_Parameters.png, id=172, 421.575pt x 277.035pt>
 File: ../figs/Epsilon_Parameters.png Graphic file (type png)
 
 <use ../figs/Epsilon_Parameters.png>
-Package pdftex.def Info: ../figs/Epsilon_Parameters.png used on input line 175.
+Package pdftex.def Info: ../figs/Epsilon_Parameters.png used on input line 186.
 
 (pdftex.def)             Requested size: 131.17076pt x 86.19699pt.
 
-<../figs/State_Step_Choices.png, id=155, 421.575pt x 277.035pt>
+<../figs/State_Step_Choices.png, id=173, 421.575pt x 277.035pt>
 File: ../figs/State_Step_Choices.png Graphic file (type png)
 
 <use ../figs/State_Step_Choices.png>
-Package pdftex.def Info: ../figs/State_Step_Choices.png used on input line 176.
+Package pdftex.def Info: ../figs/State_Step_Choices.png used on input line 187.
 
 (pdftex.def)             Requested size: 131.17076pt x 86.19699pt.
-LaTeX Font Info:    Try loading font information for T1+phv on input line 191.
+ [5]
+LaTeX Font Info:    Try loading font information for T1+phv on input line 202.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
@@ -963,39 +1101,106 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             `cmss' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [5 <../figs/Episode_Returns.png> <../figs/Epsilon_Parameters.png> <../figs/Sta
+ [6 <../figs/Episode_Returns.png> <../figs/Epsilon_Parameters.png> <../figs/Sta
 te_Step_Choices.png>]
-Overfull \hbox (31.08902pt too wide) detected at line 229
+Overfull \hbox (31.08902pt too wide) detected at line 240
 \OMS/cmsy/m/n/10 P\OT1/cmr/m/n/10 ((\OML/cmm/m/it/10 i; \OT1/cmss/m/n/10 f\OML/
 cmm/m/it/10 ; r\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; u; \OT1/cmr/m/n/10 (\OML/cmm
 /m/it/10 j; \OT1/cmss/m/n/10 e\OML/cmm/m/it/10 ; r[]\OT1/cmr/m/n/10 )) = []
  []
 
 
-Overfull \hbox (11.83792pt too wide) detected at line 249
+Overfull \hbox (11.83792pt too wide) detected at line 260
 \OML/cmm/m/it/10 R\OT1/cmr/m/n/10 ((\OML/cmm/m/it/10 i; \OT1/cmss/m/n/10 f\OML/
 cmm/m/it/10 ; r\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; u; \OT1/cmr/m/n/10 (\OML/cmm
 /m/it/10 j; \OT1/cmss/m/n/10 e\OML/cmm/m/it/10 ; r[]\OT1/cmr/m/n/10 )) = []
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 257.
-[6] [7]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 257.
+<../figs/q_value_neutral.png, id=201, 2312.64pt x 1445.4pt>
+File: ../figs/q_value_neutral.png Graphic file (type png)
+
+<use ../figs/q_value_neutral.png>
+Package pdftex.def Info: ../figs/q_value_neutral.png used on input line 273.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/q_value_low.png, id=202, 2312.64pt x 1445.4pt>
+File: ../figs/q_value_low.png Graphic file (type png)
+
+<use ../figs/q_value_low.png>
+Package pdftex.def Info: ../figs/q_value_low.png used on input line 274.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/q_value_mid.png, id=203, 2312.64pt x 1445.4pt>
+File: ../figs/q_value_mid.png Graphic file (type png)
+
+<use ../figs/q_value_mid.png>
+Package pdftex.def Info: ../figs/q_value_mid.png used on input line 275.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/q_value_high.png, id=204, 2312.64pt x 1445.4pt>
+File: ../figs/q_value_high.png Graphic file (type png)
+
+<use ../figs/q_value_high.png>
+Package pdftex.def Info: ../figs/q_value_high.png used on input line 276.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/value_neutral.png, id=205, 2312.64pt x 1445.4pt>
+File: ../figs/value_neutral.png Graphic file (type png)
+
+<use ../figs/value_neutral.png>
+Package pdftex.def Info: ../figs/value_neutral.png used on input line 277.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/value_low.png, id=206, 2312.64pt x 1445.4pt>
+File: ../figs/value_low.png Graphic file (type png)
+
+<use ../figs/value_low.png>
+Package pdftex.def Info: ../figs/value_low.png used on input line 278.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/value_mid.png, id=207, 2312.64pt x 1445.4pt>
+File: ../figs/value_mid.png Graphic file (type png)
+
+<use ../figs/value_mid.png>
+Package pdftex.def Info: ../figs/value_mid.png used on input line 279.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+
+<../figs/value_high.png, id=208, 2312.64pt x 1445.4pt>
+File: ../figs/value_high.png Graphic file (type png)
+
+<use ../figs/value_high.png>
+Package pdftex.def Info: ../figs/value_high.png used on input line 280.
+(pdftex.def)             Requested size: 198.7425pt x 124.21376pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 284.
+
+Underfull \vbox (badness 1496) has occurred while \output is active []
+
+ [7]
+Underfull \vbox (badness 2088) has occurred while \output is active []
+
+ [8 <../figs/q_value_neutral.png> <../figs/q_value_low.png> <../figs/q_value_mi
+d.png> <../figs/q_value_high.png> <../figs/value_neutral.png> <../figs/value_lo
+w.png> <../figs/value_mid.png> <../figs/value_high.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 284.
  (./Tanner_Fiez_Project.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 257.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 257.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 284.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 284.
 Package rerunfilecheck Info: File `Tanner_Fiez_Project.out' has not changed.
-(rerunfilecheck)             Checksum: D18D3DC383EABCDF598C2276BA8A271A;1356.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 257.
+(rerunfilecheck)             Checksum: 36A145FF0C66A3EE6C8788D9B5C982A0;1421.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 284.
  ) 
 Here is how much of TeX's memory you used:
- 10884 strings out of 493014
- 165708 string characters out of 6133351
- 288427 words of memory out of 5000000
- 14045 multiletter control sequences out of 15000+600000
+ 10974 strings out of 493014
+ 167639 string characters out of 6133351
+ 289409 words of memory out of 5000000
+ 14102 multiletter control sequences out of 15000+600000
  60603 words of font info for 161 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 44i,13n,49p,1411b,430s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,13n,49p,1473b,415s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/t
 exlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/tex
 live/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texl
@@ -1014,10 +1219,10 @@ dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2016/texmf-dist/fo
 nts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/
 urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/
 utmri8a.pfb>
-Output written on Tanner_Fiez_Project.pdf (7 pages, 460734 bytes).
+Output written on Tanner_Fiez_Project.pdf (8 pages, 3437455 bytes).
 PDF statistics:
- 251 PDF objects out of 1000 (max. 8388607)
- 213 compressed objects within 3 object streams
- 51 named destinations out of 1000 (max. 500000)
- 33466 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 306 PDF objects out of 1000 (max. 8388607)
+ 239 compressed objects within 3 object streams
+ 69 named destinations out of 1000 (max. 500000)
+ 33544 words of extra memory for PDF output out of 35830 (max. 10000000)
 

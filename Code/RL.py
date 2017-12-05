@@ -377,6 +377,77 @@ class ModelBasedRL(RLBase):
         self.pi[np.arange(self.pi.shape[0]), self.policy] = 1. 
 
 
+    def risk_q_contraction(self, mdp, agent, alpha=1, tol=1e-4, verbose=False):
+        """Find the optimal q function for risk-sensitive decision maker using q contraction.
+
+        :param mdp: Markov decision process object containing standard information.
+        :param agent: Agent class containing utility function for mapping TD.
+        """
+
+        # Initializing q function.
+        self.q = np.zeros((mdp.n, mdp.m))
+        self.q_error = np.zeros((mdp.n, mdp.m))
+        self.converged = np.zeros((mdp.n, mdp.m)).astype(bool)
+
+        for evaluation in xrange(self.max_eval):
+
+            if verbose:
+                if evaluation % 1000 == 0:
+                    print evaluation, 'not converged', mdp.m*mdp.n-self.converged.sum(), self.q_error.max()
+
+            delta = 0
+
+            for state_action in itertools.product(mdp.states, mdp.actions):
+                s = state_action[0]
+                a = state_action[1]
+
+                if self.converged[s, a]:
+                    continue
+
+                q_temp = self.q[s, a].copy()
+
+                # Bellman equation to back up.
+                self.q[s, a] += alpha*sum(mdp.P[s, a] * (agent.u(mdp.R[s, a] + self.gamma*self.q.max(axis=1) 
+                                                          - self.q[s, a]) - agent.ref))
+
+                diff = abs(self.q[s, a] - q_temp)
+                self.q_error[s, a] = diff
+
+                if diff < tol:
+                    self.converged[s, a] = True
+
+                delta = max(delta, diff)
+
+            # Convergence check.
+            if delta < tol:
+                break
+
+        self.v = self.q.max(axis=1)
+        self.policy = random_argmax(self.q)
+
+        # Setting policy probability distribution to the greedy policy.
+        self.pi = np.zeros((mdp.n, mdp.m))
+        self.pi[np.arange(self.pi.shape[0]), self.policy] = 1. 
+
+
+    def test_optimal_risk_q(self, mdp, agent):
+        """Testing if the q function is optimal.
+
+        :param mdp: Markov decision process object containing standard information.
+        :param agent: Agent class containing utility function for mapping TD.
+        """
+
+        self.risk_q_error = np.zeros((mdp.n, mdp.m))
+
+        for s, a in itertools.product(mdp.states, mdp.actions):
+            self.risk_q_error[s, a] = sum(mdp.P[s, a] * agent.u(mdp.R[s, a] + self.gamma*self.q.max(axis=1) 
+                                                                - self.q[s,a]) - agent.ref)
+
+        self.risk_q_error = abs(self.risk_q_error)
+
+        return self.risk_q_error
+
+
     def test_optimal_q(self, mdp):
         """Testing if the q function is optimal.
 
@@ -1008,7 +1079,6 @@ class ModelFreeRiskRL(ModelFreeRLBase):
         self.get_learned_model()
         self.v = self.q.max(axis=1)
         self.policy = random_argmax(self.q)
-        
 
 
     def eu_q_learning(self, env, agent):
@@ -1085,13 +1155,15 @@ class RiskAgent(object):
         self.lamb = lamb
 
 
-    def plot_value_function(self, title='', fig_path=None, fig_name=None, save_fig=True):
+    def plot_value_function(self, title='', fig_path=None, fig_name=None, 
+                            save_fig=True, type_val=0):
         """Plotting a value function for specific parameters.
         
         :param title: String title for figure.
         :param fig_path: File path to save figure to.
         :param fig_name: File name to save figure as.
         :param save_fig: Bool indicating whether to save the figure.
+        :param type_val: 0 for prospect or log, 1 for entropic.
         """
 
         x = np.linspace(-5, 5, 1000)
@@ -1103,8 +1175,16 @@ class RiskAgent(object):
 
         plt.figure()
 
-        plt.plot(x, value_function, color='blue', lw=2)
-        plt.axvline(self.ref, color='black', linestyle='--')
+        if type_val == 0:
+            plt.plot(x, value_function, color='blue', lw=2,
+                     label='$c_{-}=$%.1f\n$c_{+}=$%.1f\n$\\rho_{-}=$%.1f\n$\\rho_{+}=$%.1f\n' 
+                            % (self.c_minus, self.c_plus, self.rho_minus, self.rho_plus))
+        elif type_val == 1:
+            plt.plot(x, value_function, color='blue', lw=2, label='$\lambda=$%.1f' 
+                                                                   % (self.lamb))
+
+
+        plt.axvline(self.ref, color='black', linestyle='--', label='$x_0$')
 
 
         plt.title(title, fontsize=22)
@@ -1113,6 +1193,8 @@ class RiskAgent(object):
 
         plt.tick_params(axis='both', which='major', labelsize=18)
         plt.tick_params(axis='both', which='minor', labelsize=18)
+
+        plt.legend(fontsize=14)
 
         plt.tight_layout()
 
@@ -1614,6 +1696,38 @@ class GridWorldBase(object):
                 assert abs(self.P[s, a].sum() - 1) < 1e-3, 'Transitions do not sum to 1'
 
 
+    def get_policy_path(self, rl_object, start_state):
+        """Get the policy path from a given state.
+        
+        :param rl_object: Object deriving from RLBase class containing the policy learned.
+        :param start_state: Integer index of starting state.
+
+        :return self.policy_path: List of states from the starting state that 
+        are progressed from.
+        """
+
+        state = start_state
+        self.policy_path = [state]
+
+        while True:
+            action = rl_object.policy[state]
+
+            curr_pos = self.idx_to_states[state]
+            new_pos = (curr_pos[0] + self.idx_to_actions[action][0], 
+                       curr_pos[1] + self.idx_to_actions[action][1])
+
+            if new_pos in self.states_to_idx:
+                state = self.states_to_idx[new_pos]
+                self.policy_path.append(state)
+
+                if state in self.terminal_states:
+                    break
+            else:
+                break
+
+        return self.policy_path
+
+
 class GridWorldMDP(GridWorldBase):
     def __init__(self, grid_rows=4, grid_cols=4, num_actions=4, terminal_states=[0,15], 
                  terminal_rewards={0:1, 15:1}, prob_noise=0.0, living_rewards=0.1,
@@ -1770,7 +1884,12 @@ class GridDisplay(object):
         # Converting terminal state locs to the flipped orientation.
         self.state_locs_normal = np.arange(grid_object.n).reshape((grid_object.grid_rows, grid_object.grid_cols))
         self.state_locs = np.flipud(self.state_locs_normal)
+
+        self.state_locs_normal = self.state_locs_normal.reshape((-1)).tolist()
         self.state_locs = self.state_locs.reshape((-1)).tolist()
+
+        self.state_map = {k:v for k,v in zip(self.state_locs, self.state_locs_normal)}
+
         self.terminal_states = [self.state_locs.index(state) for state in grid_object.terminal_states]
         self.terminal_state_map = {k:v for k,v in zip(self.terminal_states, grid_object.terminal_states)}
 
@@ -1791,12 +1910,19 @@ class GridDisplay(object):
         :param save_fig: Bool indicating whether or not to save the figure.
         """
         
+        lw = 8
+        fs_t = 44
+        if self.grid_object.m == 4:
+            fs = 28
+        elif self.grid_object.m == 8:
+            fs = 26
+
         cmap = mcolors.LinearSegmentedColormap.from_list('cmap', ['red', 'black', 'limegreen'])
-        rc('axes', linewidth=4)
+        rc('axes', linewidth=lw)
 
-        fig, ax = plt.subplots(facecolor='black', edgecolor='white', linewidth=4)    
+        fig, ax = plt.subplots(facecolor='black', edgecolor='white', linewidth=lw)    
 
-        grid = ax.pcolor(self.values, edgecolors='white', linewidths=4, cmap=cmap, 
+        grid = ax.pcolor(self.values, edgecolors='white', linewidths=lw, cmap=cmap, 
                          vmin=self.values.min(), vmax=self.values.max())
 
         # Rearranging q values for plotting reasons.
@@ -1806,11 +1932,6 @@ class GridDisplay(object):
 
         warnings.simplefilter('ignore', MatplotlibDeprecationWarning)
         ax = grid.get_axes()
-
-        if self.grid_object.m == 4:
-            fs = 24
-        elif self.grid_object.m == 8:
-            fs = 20
 
         count = 0
         for p, value, choice in izip(grid.get_paths(), grid.get_array(), self.policy):
@@ -1828,18 +1949,14 @@ class GridDisplay(object):
        
                 patch = patches.PathPatch(path, edgecolor='white', 
                                             facecolor=cmap((self.q_values[count][0] - min_v)/(max_v-min_v)), 
-                                            lw=4, hatch='/')
-                # patch = patches.PathPatch(path, edgecolor='white', 
-                #                           facecolor=cmap((self.grid_object.terminal_rewards[self.terminal_state_map[count]]- min_v)/(max_v-min_v)), 
-                #                           lw=4, hatch='/')
+                                            lw=lw, hatch='/')
+
                 ax.add_patch(patch)
-                mpl.rcParams['hatch.linewidth'] = 0.5
+                mpl.rcParams['hatch.linewidth'] = 1.
                 mpl.rcParams['hatch.color'] = 'white'
 
-                # ax.text(x, y, "Terminal State \n%.1f" % self.grid_object.terminal_rewards[self.terminal_state_map[count]], 
-                #         ha="center", va="center", color='white', fontweight='bold', fontsize=20)
-                ax.text(x, y, "Terminal State \n%.1f" % self.q_values[count][0], 
-                        ha="center", va="center", color='white', fontweight='bold', fontsize=20)
+                ax.text(x, y, "Terminal \nState \n%.1f" % self.q_values[count][0], 
+                        ha="center", va="center", color='white', fontweight='bold', fontsize=fs)
 
             else:
                 if self.grid_object.m == 4:
@@ -1847,15 +1964,15 @@ class GridDisplay(object):
                     Mapping from vertex iteration of W, N, E, S to distance to move 
                     text from the vertex. The reference point is the bottom left hand corner at 0,0.
                     """
-                    dist_change = {0:(-.3, 0.), 1:(.0, .3), 2:(.3, .0), 3:(.0, -.3)}
+                    dist_change = {0:(-.35, 0.), 1:(.0, .35), 2:(.35, .0), 3:(.0, -.35)}
 
                 elif self.grid_object.m == 8:
                     """
                     Mapping from vertex iteration of W, N, E, S, SW, NW, NE, SE to distance to move 
                     text from the vertex. The reference point is the bottom left hand corner at 0,0.
                     """
-                    dist_change = {0:(-.3, 0.), 1:(.0, .3), 2:(.3, .0), 3:(.0, -.3), 
-                                   4:(-.3, -.3), 5:(-.3, .3), 6:(.3, .3), 7:(.3, -.3)}
+                    dist_change = {0:(-.35, 0.), 1:(.0, .35), 2:(.35, .0), 3:(.0, -.35), 
+                                   4:(-.35, -.35), 5:(-.35, .35), 6:(.35, .35), 7:(.35, -.35)}
 
                     vert_change = {0: np.array([[0, .25], [0, -.25]]), 
                                    1: np.array([[.25, 0], [-.25, 0]]), 
@@ -1922,7 +2039,7 @@ class GridDisplay(object):
                     path = mpl.path.Path(verts, codes)
        
                     patch = patches.PathPatch(path, edgecolor='white', 
-                                              facecolor=cmap((self.q_values[count][a_change[v]] - min_v)/(max_v-min_v)), lw=4)
+                                              facecolor=cmap((self.q_values[count][a_change[v]] - min_v)/(max_v-min_v)), lw=lw)
                     ax.add_patch(patch)
                     ax.text(x+dist_change[v][0], y+dist_change[v][1], "%.1f" % self.q_values[count][a_change[v]], 
                             ha="center", va="center", color='white', fontweight='bold', fontsize=fs)
@@ -1948,15 +2065,17 @@ class GridDisplay(object):
         ax.tick_params(axis='y', colors='white')
 
         for tick in ax.xaxis.get_major_ticks():
-            tick.label1.set_fontsize(24)
+            tick.label1.set_fontsize(fs)
             tick.label1.set_fontweight('bold')
         for tick in ax.yaxis.get_major_ticks():
-            tick.label1.set_fontsize(24)
+            tick.label1.set_fontsize(fs)
             tick.label1.set_fontweight('bold')
         
-        plt.title(title, color='white', fontsize='24', fontweight='bold')
+        plt.title(title, color='white', fontsize=fs_t, fontweight='bold')
             
         fig.set_size_inches((self.values.shape[1]*4, self.values.shape[0]*4))
+
+        plt.tight_layout()
 
         if save_fig:
             # Default figure path.
@@ -1983,12 +2102,16 @@ class GridDisplay(object):
         :param save_fig: Bool indicating whether or not to save the figure.
         """
         
+        lw = 8
+        fs_t = 44
+        fs = 36
+
         cmap = mcolors.LinearSegmentedColormap.from_list('cmap', ['red', 'black', 'limegreen'])
-        rc('axes', linewidth=4)
+        rc('axes', linewidth=lw)
 
-        fig, ax = plt.subplots(facecolor='black', edgecolor='white', linewidth=4)    
+        fig, ax = plt.subplots(facecolor='black', edgecolor='white', linewidth=lw)    
 
-        grid = ax.pcolor(self.values, edgecolors='white', linewidths=4, cmap=cmap, 
+        grid = ax.pcolor(self.values, edgecolors='white', linewidths=lw, cmap=cmap, 
                          vmin=self.values.min(), vmax=self.values.max())
 
         warnings.simplefilter('ignore', MatplotlibDeprecationWarning)
@@ -2008,9 +2131,6 @@ class GridDisplay(object):
                         3:(ad, 0), 4:(ad, ad), 5:(-ad, ad),
                         6:(-ad, -ad), 7:(ad, -ad)}
 
-        fs = 24
-        fs_ = 20
-
         min_v = self.values.min()
         max_v = self.values.max()        
 
@@ -2029,20 +2149,15 @@ class GridDisplay(object):
        
                 patch = patches.PathPatch(path, edgecolor='white', 
                                           facecolor=cmap((value - min_v)/(max_v-min_v)), 
-                                          lw=4, hatch='/')
-                # patch = patches.PathPatch(path, edgecolor='white', 
-                #                           facecolor=cmap((self.grid_object.terminal_rewards[self.terminal_state_map[count]]- min_v)/(max_v-min_v)), 
-                #                           lw=4, hatch='/')
+                                          lw=lw, hatch='/')
+
                 ax.add_patch(patch)
-                mpl.rcParams['hatch.linewidth'] = 0.5
+                mpl.rcParams['hatch.linewidth'] = 1.
                 mpl.rcParams['hatch.color'] = 'white'
 
-                ax.text(x, y, "Terminal State \n%.1f" % value, 
-                        ha="center", va="center", color='white', fontweight='bold', fontsize=20)
-                # ax.text(x, y, "Terminal State \n%.1f" % self.grid_object.terminal_rewards[self.terminal_state_map[count]], 
-                #         ha="center", va="center", color='white', fontweight='bold', fontsize=20)
+                ax.text(x, y, "Terminal\nState \n%.1f" % value, 
+                        ha="center", va="center", color='white', fontweight='bold', fontsize=fs)
             else: 
-
                 ax.text(x, y, "%.1f" % value, ha="center", va="center", color='white', 
                         fontweight='bold', fontsize=fs)           
                 orient = orient_dict[choice]
@@ -2059,7 +2174,7 @@ class GridDisplay(object):
                          mpl.path.Path.CLOSEPOLY]
                 path = mpl.path.Path(verts, codes)
                 patch = patches.PathPatch(path, edgecolor='white', 
-                                          facecolor='white', lw=4)
+                                          facecolor='white', lw=lw)
                 ax.add_patch(patch)            
             count += 1
 
@@ -2082,15 +2197,149 @@ class GridDisplay(object):
         ax.tick_params(axis='y', colors='white')
 
         for tick in ax.xaxis.get_major_ticks():
-            tick.label1.set_fontsize(24)
+            tick.label1.set_fontsize(fs)
             tick.label1.set_fontweight('bold')
         for tick in ax.yaxis.get_major_ticks():
-            tick.label1.set_fontsize(24)
+            tick.label1.set_fontsize(fs)
             tick.label1.set_fontweight('bold')
         
-        plt.title(title, color='white', fontsize='24', fontweight='bold')
+        plt.title(title, color='white', fontsize=fs_t, fontweight='bold')
             
         fig.set_size_inches((self.values.shape[1]*4, self.values.shape[0]*4))
+
+        plt.tight_layout()
+
+        if save_fig:
+            if fig_path is None:
+                fig_path = os.path.join(os.getcwd(), '..', 'figs')
+
+            if fig_name is None:
+                title = title.translate(None, string.punctuation)
+                fig_name = '_'.join(title.split()) + '.png'
+
+            plt.savefig(os.path.join(fig_path, fig_name), facecolor='black')
+
+        plt.show()
+        plt.close()
+
+
+
+    def show_policy(self, show_states=[], title='Grid World', fig_path=None, fig_name=None, save_fig=False):
+        """Create and plot the grid with the values and policy.
+
+        :param show_states: List of states to show the policy for.
+        :param title: Title for the figure.
+        :param fig_path: Path to save the figure to.
+        :param fig_name: File name to save the figure as.
+        :param save_fig: Bool indicating whether or not to save the figure.
+        """
+
+        lw = 8
+        fs_t = 44
+        fs = 44
+
+        cmap = mcolors.LinearSegmentedColormap.from_list('cmap', ['red', 'black', 'limegreen'])
+        rc('axes', linewidth=lw)
+
+        fig, ax = plt.subplots(facecolor='black', edgecolor='white', linewidth=lw)    
+
+        grid = ax.pcolor(self.values, edgecolors='white', linewidths=lw, cmap=cmap, 
+                         vmin=self.values.min(), vmax=self.values.max())
+
+        warnings.simplefilter('ignore', MatplotlibDeprecationWarning)
+        ax = grid.get_axes()
+
+
+        orient_dict = {0:0, 1:np.pi/2., 2:np.pi, 3:3*np.pi/2., 
+                       4:7*np.pi/4., 5:np.pi/4., 6:3*np.pi/4., 7:5*np.pi/4.}
+
+        dist = 0.42
+        arrow_loc = {0:(0, dist), 1:(-dist, 0), 2:(0, -dist),
+                     3:(dist, 0), 4:(dist, dist), 5:(-dist, dist),
+                     6:(-dist, -dist), 7:(dist, -dist)}
+
+        ad = .15
+        arrow_change = {0:(0, ad), 1:(-ad, 0), 2:(0, -ad),
+                        3:(ad, 0), 4:(ad, ad), 5:(-ad, ad),
+                        6:(-ad, -ad), 7:(ad, -ad)}
+
+        min_v = self.values.min()
+        max_v = self.values.max()        
+
+        count = 0
+
+        for p, value, choice in izip(grid.get_paths(), grid.get_array(), self.policy):
+            x, y = p.vertices[:-2, :].mean(0)
+
+            if count in self.terminal_states:
+                verts = p.vertices[:-2, :].tolist()
+                verts.append([0, 0])
+                codes = [mpl.path.Path.MOVETO, mpl.path.Path.LINETO, mpl.path.Path.LINETO, 
+                         mpl.path.Path.LINETO, mpl.path.Path.CLOSEPOLY]
+                path = mpl.path.Path(verts, codes)
+       
+                patch = patches.PathPatch(path, edgecolor='white', 
+                                          facecolor=cmap((value - min_v)/(max_v-min_v)), 
+                                          lw=lw, hatch='/')
+
+                ax.add_patch(patch)
+                mpl.rcParams['hatch.linewidth'] = 1.
+                mpl.rcParams['hatch.color'] = 'white'
+
+                ax.text(x, y, "Terminal \nState", 
+                        ha="center", va="center", color='white', fontweight='bold', fontsize=fs)
+
+            else: 
+                if self.state_map[count] in show_states:
+
+                    orient = orient_dict[choice]
+                    direct = arrow_loc[choice]
+                    
+                    ax.add_patch(patches.RegularPolygon((x + direct[0], y + direct[1]), 
+                                                            3, .05, color='white', orientation=orient))
+
+                    verts = [[] for a in range(3)]
+                    verts[0] = np.array([x, y]) + np.array(arrow_change[self.policy[count]])
+                    verts[-1] = [0, 0]
+                    verts[1] = np.array(arrow_loc[self.policy[count]]) + np.array([x, y])
+                    codes = [mpl.path.Path.MOVETO, mpl.path.Path.LINETO, 
+                             mpl.path.Path.CLOSEPOLY]
+                    path = mpl.path.Path(verts, codes)
+                    patch = patches.PathPatch(path, edgecolor='white', 
+                                              facecolor='white', lw=lw)
+                    ax.add_patch(patch)            
+            count += 1
+
+        for spine in ax.spines.values():
+            spine.set_edgecolor('white')
+                
+        x_axis_size = self.values.shape[1]
+        y_axis_size = self.values.shape[0]
+
+        xlabels = [str(val) for val in range(0, x_axis_size)]
+        ylabels = [str(val) for val in range(y_axis_size-1, -1, -1)]
+
+        ax.set_xticks(np.arange(0.5, len(xlabels)))
+        ax.set_yticks(np.arange(0.5, len(ylabels)))
+
+        ax.set_xticklabels(xlabels)                                                       
+        ax.set_yticklabels(ylabels) 
+
+        ax.tick_params(axis='x', colors='white')
+        ax.tick_params(axis='y', colors='white')
+
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(fs)
+            tick.label1.set_fontweight('bold')
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(fs)
+            tick.label1.set_fontweight('bold')
+        
+        plt.title(title, color='white', fontsize=fs_t, fontweight='bold')
+            
+        fig.set_size_inches((self.values.shape[1]*4, self.values.shape[0]*4))
+
+        plt.tight_layout()
 
         if save_fig:
             if fig_path is None:

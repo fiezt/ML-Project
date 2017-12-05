@@ -40,7 +40,7 @@
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
 
-\title{CSE 546 Project Milestone: \\ {Risk-Sensitive Reinforcement and Inverse Reinforcement Learning}}
+\title{Risk-Sensitive Reinforcement Learning}
 
 \author{
   Tanner Fiez \\
@@ -83,10 +83,21 @@ The complete procedure for risk-sensitive Q-learning with a finite horizon and a
 \vspace{-4mm}
 \subsection{Simulations}
 In order to test the implementation of the risk-sensitive Q-learning algorithm we created a synthetic environment called Grid-World. In this environment each state is given by a tile in the grid and the possible actions are the the compass directions (N, E, S, W). The terminal states were set to be the upper left and lower right corners of the grid. Fig.~\ref{fig:sim} provides an example of the results. We designed the environment, which can be thought of as the underlying MDP, very simply to verify the algorithm was learning correctly. Thus transitions were deterministic, i.e. when an action is chosen the agent goes to the expected next state, and each action incurred reward of $-1$ except in the terminal states the reward was $0$. We then used the prospect value function with all risk-parameters set to $1$ which reduces the problem to standard q-learning. Thus the solution that should be learned is to take the Manhattan path to the nearest terminal state, and we indeed see this is the case. More interesting examples can be designed to show how risk-preferences will change the policy that is learned, but we have verified the algorithm is implemented correctly. Detailed results are provided in Section~\ref{sim}
+\begin{figure}[t]
+    \centering
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/prospect_neutral}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/prospect_low}\label{fig:sim2}}\vfill
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/prospect_mid}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/prospect_high}\label{fig:sim2}}
+    \caption{Risk Sensitive Q-learning results.}
+    \label{fig:sim}
+\end{figure}
 \begin{figure}[H]
     \centering
-    \subfloat[][Q-value function results.]{\includegraphics[width=0.5\linewidth]{../figs/Grid_World_Risk_Sensitive_QLearning_QValues}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=0.5\linewidth]{../figs/Grid_World_Risk_Sensitive_QLearning_Values}\label{fig:sim2}}
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/policy_neutral}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/policy_low}\label{fig:sim2}}\vfill
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/policy_mid}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/policy_high}\label{fig:sim2}}
     \caption{Risk Sensitive Q-learning results.}
     \label{fig:sim}
 \end{figure}
@@ -254,6 +265,22 @@ where $t_{\text{\sn{seek}}}(i,j)$ is a random variable for the time to travel an
 \subsubsection{Initial State}
 The intial state for the taxi will be $x_0=(i,\e,r_0)$ where $i$ is the node or
 zone which the taxi most frequently starts in and $r_0\in \mc{R}_0=[0,b_0)$. It always starts in the empty state.
+
+
+\subsection{Further Figures}
+\begin{figure}[H]
+    \centering
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/q_value_neutral}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/q_value_low}\label{fig:sim2}}\vfill
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/q_value_mid}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/q_value_high}\label{fig:sim2}}\vfill
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/value_neutral}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/value_low}\label{fig:sim2}}\vfill
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/value_mid}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/value_high}\label{fig:sim2}}
+    \caption{Risk Sensitive Q-learning results.}
+    \label{fig:sim}
+\end{figure}
 \end{document}
 
 
