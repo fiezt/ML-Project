@@ -1180,7 +1180,7 @@ class RiskAgent(object):
                      label='$c_{-}=$%.1f\n$c_{+}=$%.1f\n$\\rho_{-}=$%.1f\n$\\rho_{+}=$%.1f\n' 
                             % (self.c_minus, self.c_plus, self.rho_minus, self.rho_plus))
         elif type_val == 1:
-            plt.plot(x, value_function, color='blue', lw=2, label='$\lambda=$%.1f' 
+            plt.plot(x, value_function, color='blue', lw=2, label='$\lambda=$%.2f' 
                                                                    % (self.lamb))
 
 
@@ -1856,7 +1856,8 @@ class GridWorldEnv(GridWorldBase):
         sample = np.random.multinomial(1, self.P[self.s, a]).tolist()
         s_new = sample.index(1)
 
-        if s_new in self.terminal_states:
+        if self.s in self.terminal_states:
+            # Note that this can be changed if we want to consider an episodic task.
             done = False
         else:
             done = False

@@ -59,6 +59,8 @@ Reinforcement learning algorithms have historically modeled agents as expected u
 
 In \cite{DBLP:journals/corr/ShenTSO13} a reinforcement learning framework to model risk-sensitive decision making was created leveraging behavioral models of human decision making. In \cite{mazumdar:2017aa} and \cite{ratliff:2017aa} a risk-sensitive inverse reinforcement learning framework was developed. This project will focus on the reinforcement learning problem and time permitting explore the inverse reinforcement learning problem. The goal of the project is to apply the methods to the New York Taxi dataset\footnote{The New York Taxi dataset is available at \url{https://publish.illinois.edu/dbwork/open-data/}}. The work leading up to the project milestone has been focused on implementing and testing the risk-sensitive reinforcement learning algorithm in a synthetic grid-world environment, formulating the Markov Decision Process (MDP) for taxi drivers, and preprocessing the taxi data to create the underlying MDP for the environment. The bulk time spent on the project thus far has been devoted to the latter two tasks.
 
+\section{Markov Decision Process}
+
 
 \section{Risk-Sensitive Reinforcement Learning}
 Sequential decision making problems can often be formulated as an MDP that can be solved via dynamic programming algorithms such as value iteration, policy iteration, and Q-value iteration. These methods however, require that transition probabilities and event outcomes are known a priori. In practice these quantities are typically unknown and thus a policy must be gradually improved as an agent explores an environment. One of the most popular reinforcement learning algorithms to do this is called Q-learning \cite{sutton1998reinforcement}. The Q-learning algorithm iteratively updates the Q-function, a mapping from state-action pairs to value estimates, by taking steps in the direction of an error-like term called the temporal difference. The novel contribution of \cite{DBLP:journals/corr/ShenTSO13} was to extend this method by applying a transformation to the temporal difference term with a value function obeying certain properties and coming from the class of functions that have been developed to model human behavior, while maintaining convergence guarantees. Through applying the value function to the temporal difference term, a nonlinear transformation is applied not only to the rewards, but also to the transition probabilities. This is significant given that this is precisely what humans have been observed to do when making decisions.
@@ -279,6 +281,31 @@ zone which the taxi most frequently starts in and $r_0\in \mc{R}_0=[0,b_0)$. It 
     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/value_mid}\label{fig:sim1}}\hfill
     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/value_high}\label{fig:sim2}}
     \caption{Risk Sensitive Q-learning results.}
+    \label{fig:sim}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/entropic_low}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/entropic_high}\label{fig:sim2}}
+    \caption{Risk Sensitive Q-learning results.}
+    \label{fig:sim}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/entropic_policy_low}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/entropic_policy_high}\label{fig:sim2}}
+    \caption{Risk Sensitive Q-learning results.}
+    \label{fig:sim}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/entropic_q_value_high}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/entropic_q_value_low}\label{fig:sim2}}\vfill
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/entropic_value_high}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/entropic_value_low}\label{fig:sim2}}
     \label{fig:sim}
 \end{figure}
 
