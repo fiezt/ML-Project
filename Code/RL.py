@@ -100,7 +100,7 @@ class RLBase(object):
 
 
     def plot_epsiode_returns(self, title='Episode Returns', fig_path=None, 
-                             fig_name=None, save_fig=True):
+                             fig_name=None, save_fig=False):
         """Plotting the reward returns over episodes.
         
         :param title: String title for figure.
@@ -145,7 +145,7 @@ class RLBase(object):
 
 
     def scatter_epsiode_returns(self, title='Episode Returns', fig_path=None, 
-                                fig_name=None, save_fig=True):
+                                fig_name=None, save_fig=False):
         """Scatter plotting the reward returns over episodes.
         
         :param title: String title for figure.
@@ -715,7 +715,7 @@ class ModelFreeRLBase(RLBase):
 
 
     def plot_alpha_parameters(self, s, a, title='State-Action Step Choices', fig_path=None, 
-                              fig_name=None, save_fig=True):
+                              fig_name=None, save_fig=False):
         """Plotting the step size choices for a state over episodes.
         
         :param s: Integer state index to plot the step size choices for.
@@ -762,7 +762,7 @@ class ModelFreeRLBase(RLBase):
 
 
     def plot_epsilon_parameters(self, title='Epsilon Parameters', fig_path=None, 
-                                fig_name=None, save_fig=True):
+                                fig_name=None, save_fig=False):
         """Plotting the e-greedy parameter over episodes.
         
         :param title: String title for figure.
@@ -807,7 +807,7 @@ class ModelFreeRLBase(RLBase):
 
 
     def plot_tau_parameters(self, title='Tau Parameters', fig_path=None, 
-                            fig_name=None, save_fig=True):
+                            fig_name=None, save_fig=False):
         """Plotting softmax parameter tau over episodes.
         
         :param title: String title for figure.
@@ -1156,7 +1156,7 @@ class RiskAgent(object):
 
 
     def plot_value_function(self, title='', fig_path=None, fig_name=None, 
-                            save_fig=True, type_val=0):
+                            save_fig=False, type_val=0):
         """Plotting a value function for specific parameters.
         
         :param title: String title for figure.
@@ -1488,7 +1488,7 @@ class SimulatedMDP(object):
         self.get_learned_model(counts, reward_min)
 
 
-    def simulate_environment(self, env, num_episodes):
+    def simulate_environment(self, env, num_episodes, horizon=10000000):
         """Simulate the agent in the environment to get sample transitions.
         
         :param env: environment class which the agent will interact with.
@@ -1506,7 +1506,7 @@ class SimulatedMDP(object):
             s = env.reset()
             done = False
             
-            while not done:
+            for _ in horizon:
                 # OpenAI Gym case.
                 try:
                     a = env.action_space.sample()
@@ -1521,6 +1521,9 @@ class SimulatedMDP(object):
                 self.R[s, a, s_new] += reward
                 
                 s = s_new
+
+                if done:
+                    break
 
         return counts, reward_min
         
@@ -1770,7 +1773,8 @@ class GridWorldMDP(GridWorldBase):
 class GridWorldEnv(GridWorldBase):
     def __init__(self, grid_rows, grid_cols, num_actions=4, terminal_states=[0,15], 
                  terminal_rewards={0:1, 15:1}, prob_noise=0.0, living_rewards=0.1, 
-                 sample_mu=0, sample_std=0, probs=None, rewards=None, initial_state=None):
+                 sample_mu=0, sample_std=0, probs=None, rewards=None, initial_state=None, 
+                 episodic=False):
         """Creating the grid world environment. Note that everything is indexed by 
         row, column, not x, y coordinates.
 
@@ -1789,6 +1793,8 @@ class GridWorldEnv(GridWorldBase):
         :param rewards: None indicates to create the default reward distribution, 
         otherwise this should be a numpy array of the reward distribution from
         state, action, state.
+        :param initial_state: Integer of index to start each episode from.
+        :param episodic: Bool indicating whether to stop when a terminal state has been reached.
         """  
 
         super(GridWorldEnv, self).__init__(grid_rows=grid_rows, grid_cols=grid_cols, 
@@ -1815,6 +1821,9 @@ class GridWorldEnv(GridWorldBase):
 
         if initial_state is not None:
             self.initial_state = initial_state
+
+        self.episodic = True
+
 
     def reset(self):
         """Set the state to a random state.
@@ -1856,9 +1865,12 @@ class GridWorldEnv(GridWorldBase):
         sample = np.random.multinomial(1, self.P[self.s, a]).tolist()
         s_new = sample.index(1)
 
-        if self.s in self.terminal_states:
+        if s_new in self.terminal_states:
             # Note that this can be changed if we want to consider an episodic task.
-            done = False
+            if self.episodic:
+                done = True
+            else:
+                done = False
         else:
             done = False
 

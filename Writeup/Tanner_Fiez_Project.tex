@@ -23,6 +23,7 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{subfig}
@@ -40,7 +41,7 @@
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
 
-\title{Risk-Sensitive Reinforcement Learning}
+\title{Classic and Risk-Sensitive Reinforcement Learning}
 
 \author{
   Tanner Fiez \\
@@ -53,17 +54,111 @@
 \begin{document}
 
 \maketitle
-
 \section{Introduction}
-Reinforcement learning algorithms have historically modeled agents as expected utility maximizers. This modeling paradigm thus considers agents as rational decision makers. A rational decision maker can be described as \emph{risk-neutral}. However, extensive work in behavior psychology, cognitive science, and economics has shown that humans are inherently irrational decision makers acting according to both a reference point and an internal set of risk preferences. This phenomenon has revealed that humans distort event probabilities and value losses and gains asymmetrically. Specifically, low probability events are overestimated and high probability events are underestimated, and losses are weighed more heavily than gains. Owing to these properties, humans tend to be risk-seeking in losses and risk-averse in gains. See Section \ref{example} for a concrete example.
+Reinforcement learning (RL) is a subfield of machine learning that focuses on learning from interactions. The core idea of RL is that an agent learns through the consequences of actions instead of being explicitly taught how to act. Actions are chosen based on past experience and new choices, which can be thought of as learning through trial and error. Inherently this forces a tradeoff between exploitation and exploration that must be solved. This style of learning has often been traced to how humans learn. With each choice we make, feedback from the environment---positive or negative---provides information on how to make future choices. In computer science this abstraction is often ignored and the focus is on computational approaches to learning from interactions. 
 
-In \cite{DBLP:journals/corr/ShenTSO13} a reinforcement learning framework to model risk-sensitive decision making was created leveraging behavioral models of human decision making. In \cite{mazumdar:2017aa} and \cite{ratliff:2017aa} a risk-sensitive inverse reinforcement learning framework was developed. This project will focus on the reinforcement learning problem and time permitting explore the inverse reinforcement learning problem. The goal of the project is to apply the methods to the New York Taxi dataset\footnote{The New York Taxi dataset is available at \url{https://publish.illinois.edu/dbwork/open-data/}}. The work leading up to the project milestone has been focused on implementing and testing the risk-sensitive reinforcement learning algorithm in a synthetic grid-world environment, formulating the Markov Decision Process (MDP) for taxi drivers, and preprocessing the taxi data to create the underlying MDP for the environment. The bulk time spent on the project thus far has been devoted to the latter two tasks.
+The distinguishing factors of an RL problem are a closed--loop (actions influence later feedback), indirect feedback (the agent is not explicitly told what to do), and feedback playing out over an extended period of time (feedack from an action may come well after an action is taken). The most fundamental method to model such characteristics is through a Markov Decision Process (MDP). The MDP formulation is designed to include sensing, actions, and a goal in a simple form. An algorithm that solves an MDP is considered to be an RL algorithm. We provide a description of an MDP in Section~\ref{sec:mdp}.
 
-\section{Markov Decision Process}
+We will begin by examining methods for solving MDPs with a focus on the distinct approaches of model based algorithms and model free algorithms in Sections~\ref{sec:model_based} and~\ref{sec:model_free} respectively. In this work we will only consider finite MDPs, i.e. problems with discrete state and action spaces. Note that many problems with continuous state and action spaces can be discretized so that the methods we will discuss are still applicable. The first major contribution of this work is the implementation of many classic RL algorithms in a flexible, object-oriented framework. In support of the algorithms, we develop a grid-world environment that allows for unique problem specifications, rapid testing and comparison of algorithms, and visualization of results. Moreover, we have made our library compatible with OpenAI Gym\footnote{https://gym.openai.com/envs}~\cite{DBLP:journals/corr/BrockmanCPSSTZ16}. OpenAI Gym is a recently developed python toolkit containing a wide variety of RL environments for evaluation purposes. This was a significant step in developing benchmarks for RL because the problems do not arise as naturally as supervised learning problems. Despite this advancement, there is still no universally used python package containing RL algorithms, providing motivation for this portion of the work as we seek to begin to create our own scikit-learn like package to make RL more accessible and ubiquitous.
+
+Following our work with classic RL, we delve deeper into an interesting and promising new line of work called risk-sensitive RL. RL algorithms have historically modeled agents as expected utility maximizers. This modeling paradigm thus considers agents as rational decision makers. A rational decision maker can be described as risk-neutral. However, extensive work in behavior psychology, cognitive science, and economics has shown that humans are inherently irrational decision makers acting according to both a reference point and an internal set of risk preferences. This phenomenon has revealed that humans distort event probabilities and value losses and gains asymmetrically. Specifically, low probability events are overestimated and high probability events are underestimated, and losses are weighed more heavily than gains (see Appendix Section \ref{example} for a concrete example). In \cite{DBLP:journals/corr/ShenTSO13} an RL framework to model risk-sensitive decision making was developed leveraging behavioral models of human decision making. The results show that many of the convergence properties and optimality conditions from classic RL still apply. We discuss the methods and implications of the paper, our implementation, and the tests we run in Section~\ref{sec:risk}.
 
 
-\section{Risk-Sensitive Reinforcement Learning}
-Sequential decision making problems can often be formulated as an MDP that can be solved via dynamic programming algorithms such as value iteration, policy iteration, and Q-value iteration. These methods however, require that transition probabilities and event outcomes are known a priori. In practice these quantities are typically unknown and thus a policy must be gradually improved as an agent explores an environment. One of the most popular reinforcement learning algorithms to do this is called Q-learning \cite{sutton1998reinforcement}. The Q-learning algorithm iteratively updates the Q-function, a mapping from state-action pairs to value estimates, by taking steps in the direction of an error-like term called the temporal difference. The novel contribution of \cite{DBLP:journals/corr/ShenTSO13} was to extend this method by applying a transformation to the temporal difference term with a value function obeying certain properties and coming from the class of functions that have been developed to model human behavior, while maintaining convergence guarantees. Through applying the value function to the temporal difference term, a nonlinear transformation is applied not only to the rewards, but also to the transition probabilities. This is significant given that this is precisely what humans have been observed to do when making decisions.
+Our final contribution, detailed in Section \ref{sec:taxi}, is to apply the RL methods we discuss to the New York Taxi dataset\footnote{The New York Taxi dataset is available at \url{https://publish.illinois.edu/dbwork/open-data/}}~\cite{donovan2014new}. In this problem we formulate an MDP for taxi drivers and pre-process the data---which includes trip times, distances, fares, and pick-up and drop-off locations---accordingly to create the environment. The goal in this problem is to find the optimal policy for a driver, i.e. to find where a driver should go to look for a new ride following dropping off passengers to maximize their earning rate. Because we have access to the data, we can find the empirical policy of a driver and compare this to the optimal policy. Furthermore, we can apply a parameter sweep for the value functions in risk-sensitive RL to find the set of parameters which produces a policy that most closely aligns with the empirical policy of a driver, allowing us to characterize the risk-preferences of a driver.
+
+\section{Markov Decision Process}\label{sec:mdp}
+The key requirement of the state and environment in an MDP is that they obey the Markov property. The Markov property refers to the memoryless property of a stochastic process. In plain language, the Markov property says that given the present, the future is independent of the past. In the most general case the dynamics of a process are defined by the joint probability distribution
+\begin{equation}
+\mc{P}(S_{t+1}=s', R_{t+1}=r'|S_0, A_0, R_1, \dots, S_{t-1}, A_{t-1}, R_t, S_t, A_t).
+\end{equation}
+In the case where the Markov property is satisfied, the dynamics can equivalently be represented by the following:
+\begin{equation}\label{eq:dynamics}
+p(s', r'|s, a) \triangleq \mc{P}(S_{t+1}=s', R_{t+1}=r'|S_t=s, A_t=a).
+\end{equation}
+The Markov property is fundamental in reinforcement learning because the dynamics of one transition allow for prediction of the next state and the expected reward given only the current state and action. In RL problems, even when the state does not obey the Markov property, it is often still thought of as at least approximating it~\cite{sutton1998reinforcement}.
+
+Given the dynamics specified by the Markov property in~(\ref{eq:dynamics}) all quantities of interest with respect to the environment can be computed. Specifically, we can determine the state-transition probabilities and the expected rewards of state-action-state triples. The state-transition probabilities are obtained by marginalizing out the rewards.
+\begin{equation}
+p(s'|s, a) \triangleq \mc{P}(S_{t+1}=s'|S_t=s, A_t=a) = \sum_{r' \in \mc{R}} p(s', r'|s, a).
+\end{equation}
+The expected rewards are obtained by using the definition of expectation.
+\begin{equation}
+r(s,a,s') \triangleq \mb{E}[R_{t+1}|S_t=s, A_t=a, S_{t+1}=s') = \frac{\sum_{r' \in \mc{R}} r'p(s', r'|s, a)}{p(s'|s,a)}.
+\end{equation}
+
+We can now define an MDP using the above quantities. An MDP is a tuple given as follows:
+\begin{equation}
+\text{MDP} = (\mc{X}, \mc{U}, \mc{P}(\cdot|\cdot, \cdot), \mc{R}(\cdot, \cdot, \cdot), \gamma).
+\end{equation}
+The quantities encompassed by the MDP are defined as:
+\begin{itemize}
+\item $\mc{X}$ is a finite set of states.
+\item $\mc{U}$ is a finite set of actions.
+\item $\mc{P}(s'|s, a)$ is a transition kernel giving the probability that taking action $a$ in state $s$ will lead to state $s'$.
+\item $\mc{R}(s, a, s')$ is a reward kernel giving the reward received from taking action $a$ in state $s$ and ending up in state $s'$.
+\item $\gamma \in [0, 1]$ is a discounting factor on the rewards representing the importance of immediate and future rewards.
+\end{itemize}
+With the problem framework defined we now focus our attention on defining what it means to solve or approximately solve an MDP and methods to do so computationally.
+
+\section{Model Based Reinforcement Learning}\label{sec:model_based}
+Recall that the goal in RL is to find the optimal policy. This means we want to learn the optimal action to take in each state in the state space. Methods that use a model of the environment given by an MDP to compute an optimal policy are referred to as model based RL algorithms. These methods utilize dynamic programming principles and are sometimes referred to as planning methods because they are offline in the sense that they do not require explicit interaction with the environment.
+
+RL algorithms almost always estimate value functions. Value functions are functions of states or state-action pairs which estimate how much value a state or state-action pair has. The value here means the expected future rewards from a state or state-action pair. Because the expected future rewards depend on future actions, value functions are defined with respect to a policy. We define a policy as a probability mass function from a state to an action. Formally we will denote a policy as $\pi(a|s)$ and when we drop $a, s$ this denotes following $\pi$ at each state encountered. The value function of state $s$ under a policy $\pi$ is then given by
+\begin{equation}
+v_\pi(s) = \mb{E}_\pi[\sum_{k=0}^\infty \gamma^k R_{t+k+1}|S_t=s],
+\end{equation}
+and similarly the value function of a state-action pair $s, a$ under a policy $\pi$ is then given by
+\begin{equation}
+q_\pi(s, a) = \mb{E}_\pi[\sum_{k=0}^\infty \gamma^k R_{t+k+1}|S_t=s, A_t=a].
+\end{equation}
+Each of these definitions can be unrolled through recursive relationships to give the following equivalent formulations
+\begin{equation}
+v_\pi(s) = \sum_a \pi(a|s)\sum_{s',r'}p(s', r'|s, a)[r' + \gamma v_\pi(s')],
+\end{equation}
+\begin{equation}
+q_\pi(s, a) = \sum_{s',r'}p(s', r'|s, a)[r' + \gamma v_\pi(s')],
+\end{equation}
+which are known as the Bellman equations. This formulation is convenient as it is explicitly clear that the sum over $s', r'$ is an expectation over a state-action pair $s, a$ as we noted was the meaning of a value function.
+
+The preceding expressions define value functions for a policy, while the goal of RL is to find the optimal policy. This lends naturally to a set of optimization problems that must be solved. 
+\begin{equation}\label{eq:evaluation}
+v_*(s) = \max_\pi v_\pi(s) \hspace{5mm} \text{and} \hspace{5mm} q_*(s, a) = \max_\pi q_\pi(s, a).
+\end{equation}
+The solutions to these optimization problems give what are known as the Bellman optimality conditions. The derivations follow from the Bellman equations and are provided in Appendix Section~\ref{bellman}.
+\begin{equation}\label{eq:v_opt}
+v_*(s) = \underset{a}{\text{max}} \ \sum_{s', r'}p(s', r'|s,a)[r' + \gamma v_*(s')], 
+\end{equation}
+\begin{equation}\label{eq:q_opt}
+q_*(s,a) = \sum_{s', r'}p(s', r'|s,a)[r' + \gamma \underset{a'}{\text{max}} \ q_*(s',a')].
+\end{equation}
+This is a famous result and is detailed in~\cite{bellman2013dynamic}. It is also worth noting that the solution is unique, this argument hinges on formulating the Bellman equation as a fixed point problem and showing that it is a contraction. Additionally, if the dynamics are known the optimality conditions reduce to the problem of solving a system of equations in the dimension of the state space, meaning that any nonlinear system equation solving method can be applied. The optimal policy then naturally follows from this analysis. In the case of the state-value function the optimal policy comes from finding the actions in each state which obtains the maximum of the Bellman optimality condition. Formally this is the following equation
+\begin{equation}\label{eq:improvement}
+\pi^*(s) = \arg \max_a \sum_{s', r'}p(s', r'|s,a)[r' + \gamma v_*(s')].
+\end{equation}
+Similarly, in the case of the state-action value function the optimal policy simply comes from taking the action which maximizes the state-action value function at each state. The optimal policy is thus a greedy policy over the value functions.
+
+The reason such attention was paid to defining the state-value function and the state-action value function and deriving the optimality conditions is that these conditions form the basis for nearly all RL algorithms whether through solving explicitly or through approximation. Model based dynamic programming methods in fact use exactly the Bellman equations and the Bellman optimality conditions. We have implemented the three primary methods: these are policy iteration, value iteration, and $q$-value iteration. In this section we give an overview and refer the reader to Appendix Section~\ref{sec:model_appendix} for the explicit algorithms.
+
+Policy iteration sweeps over the state space and alternates between two steps until convergence. These are policy evaluation, given by (\ref{eq:evaluation}), and policy improvement (\ref{eq:improvement}). Value iteration sweeps over the state space and applies the optimality condition in (\ref{eq:v_opt}) until convergence. $q$-value iteration sweeps over the state space and applies the optimality condition in (\ref{eq:q_opt}) until convergence. Each of these algorithms are optimal and will arrive at the same solution.
+
+We now provide results testing these algorithms and demonstrate that grid-world environment we created in Fig.~\ref{fig:model}. To prove that the algorithms are implemented correctly we use a very simple MDP. We designate the state space to be indexes of the grid and actions to be the compass directions $\{N, E, S, W\}$. The transition function is deterministic (actions take the agent to the desired state) with the exception that actions that cause the agent to go off the grid result in the agent staying in the same state with probability $1$ and an agent remains in a terminal state when reached, all transitions incur a reward of $-1$ with the exception transitions to and from a terminal state incur a reward of $0$, and the discount factor is 1. Thus the problem is to find the shortest path to a terminal state from an initial state which would be the Manhattan Distance.
+\begin{figure}[H]
+    \centering
+    \subfloat[][Value Iteration and Policy Iteration.]{\includegraphics[width=.4\linewidth]{../paper_figs/value_iteration}\label{fig:value_iteration_simple}}
+    \subfloat[][$q$-value Iteration.]{\includegraphics[width=.4\linewidth]{../paper_figs/q_value_iteration_simple}\label{fig:q_value_iteration_simple}}
+    \caption{Model Based Algorithms in Grid World}
+    \label{fig:model}
+\end{figure}
+
+
+
+\section{Model Free Reinforcement Learning}\label{sec:model_free}
+Sequential decision making problems can often be formulated as an MDP that can be solved via dynamic programming algorithms such as value iteration, policy iteration, and Q-value iteration. These methods however, require that transition probabilities and event outcomes are known a priori. In practice these quantities are typically unknown and thus a policy must be gradually improved as an agent explores an environment. One of the most popular reinforcement learning algorithms to do this is called Q-learning \cite{sutton1998reinforcement}. The Q-learning algorithm iteratively updates the Q-function, a mapping from state-action pairs to value estimates, by taking steps in the direction of an error-like term called the temporal difference.
+
+
+
+\section{Risk-Sensitive Reinforcement Learning}\label{sec:risk}
+The novel contribution of \cite{DBLP:journals/corr/ShenTSO13} was to extend this method by applying a transformation to the temporal difference term with a value function obeying certain properties and coming from the class of functions that have been developed to model human behavior, while maintaining convergence guarantees. Through applying the value function to the temporal difference term, a nonlinear transformation is applied not only to the rewards, but also to the transition probabilities. This is significant given that this is precisely what humans have been observed to do when making decisions.
 
 
 \subsection{Algorithm}
@@ -87,25 +182,25 @@ The complete procedure for risk-sensitive Q-learning with a finite horizon and a
 In order to test the implementation of the risk-sensitive Q-learning algorithm we created a synthetic environment called Grid-World. In this environment each state is given by a tile in the grid and the possible actions are the the compass directions (N, E, S, W). The terminal states were set to be the upper left and lower right corners of the grid. Fig.~\ref{fig:sim} provides an example of the results. We designed the environment, which can be thought of as the underlying MDP, very simply to verify the algorithm was learning correctly. Thus transitions were deterministic, i.e. when an action is chosen the agent goes to the expected next state, and each action incurred reward of $-1$ except in the terminal states the reward was $0$. We then used the prospect value function with all risk-parameters set to $1$ which reduces the problem to standard q-learning. Thus the solution that should be learned is to take the Manhattan path to the nearest terminal state, and we indeed see this is the case. More interesting examples can be designed to show how risk-preferences will change the policy that is learned, but we have verified the algorithm is implemented correctly. Detailed results are provided in Section~\ref{sim}
 \begin{figure}[t]
     \centering
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/prospect_neutral}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/prospect_low}\label{fig:sim2}}\vfill
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/prospect_mid}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/prospect_high}\label{fig:sim2}}
-    \caption{Risk Sensitive Q-learning results.}
+    \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_neutral}\label{fig:sim1}}\hfill
+    \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_low}\label{fig:sim2}}\hfill
+    \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_mid}\label{fig:sim1}}\hfill
+    \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_high}\label{fig:sim2}}
+    \caption{Prospect Value Function.}
     \label{fig:sim}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/policy_neutral}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/policy_low}\label{fig:sim2}}\vfill
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/policy_mid}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/policy_high}\label{fig:sim2}}
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_neutral}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_low}\label{fig:sim2}}\vfill
+    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_mid}\label{fig:sim1}}\hfill
+    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_high}\label{fig:sim2}}
     \caption{Risk Sensitive Q-learning results.}
     \label{fig:sim}
 \end{figure}
 
 
-\section{New York Taxi Dataset}
+\section{New York Taxi Dataset}\label{sec:taxi}
 \subsection{Data Description}
 The New York Taxi Dataset covers taxi operations from $2010$--$2013$, in total there are nearly $700$ million recorded trips. The data is stored in separate CSV files for each month. We will analyze a subset of the drivers and over only a few months. Each row in a file contains the information for a trip record. The key information that is contained is the hack license (driver ID), pickup date-time, dropoff date-time, trip time in seconds, trip distance in miles, GPS coordinates at the starting location, GPS coordinates at the ending location, total fare including tip, and the total cost of tolls.
 \subsection{MDP Formulation for Taxi Drivers}
@@ -124,72 +219,6 @@ The data required a significant amount of preprocessing to clean the data and ob
 These are only a subset of the issues with the data that we cleaned but these are the most significant and well documented from previous work with the data. 
 
 There are also a couple of important things we do to create the MDP which we make note of. Drivers work abnormal hours, i.e. the typical driver begins work in the evening and works until the early morning hours. In light of this we shift all transaction times back by 12 hours so that we can observe the full workday within a single date. We estimate the time spent searching for a new trip as the time from dropoff to pickup, but if this time exceeds 20 we assume the driver was taking a break.
-\section{Future Work}
-As the final deadline approaches we will work on towards the following experiments and goals. First and foremost, utilizing the underlying MDP framework that we have designed for taxi drivers we will investigate the divergence between the empirical policy of drivers found in the data and the optimal policy found with a standard q-learning formulation. This will be allow us to determine whether drivers have learned to maximize their expected earnings. We will then explore the risk-sensitive q-learning formulation, and with the value functions we examine, attempt to find parameters which produce a policy that gives low KL divergence with the empirical policy. If we can do this successfully, it will allow us to characterize how drivers weigh decisions and their risk preferences. Time permitting, we will then explore the risk-sensitive inverse reinforcement learning problem in Grid-World and then in the taxi dataset. 
-
-\bibliographystyle{plainnat}
-\bibliography{bibtex}
-\section{Appendix}\label{appendix}
-
-
-
-\subsection{Risk-Sensitive Decision Making Example}\label{example}
-A prevalent example to demonstrate how risk factors into human-decision making including warping of the probability of events as well as losses being weighed more significantly than gains is as follows. When asked to choose between being given \$90 or having a 10\% chance of winning \$100 and a 90\% chance of winning \$0 most people will choose to take the guaranteed \$90. When this question is framed as a loss however, i.e. to choose between losing \$90 or having a 10\% chance of losing \$0 and a 90\% chance of losing \$100, most will choose to risk an increased loss for a chance at no loss. A rational, risk-neutral decision maker would be indifferent to the options in both framings of the question since the expected value of each option is the same.
-
-
-\subsection{Risk-Sensitive Q-Learning Description}\label{alg_desc}
-Q-learning is an off-policy method, meaning the policy being learned is not the policy that is being sampled from when choosing actions to interact with the environment. The policy that is being followed must be proper, meaning that all states are visited infinitely often. Two such proper policies are the $\epsilon$-greedy policy and the Boltzmann policy. Each of these methods trades off exploration and exploitation. Given the greedy action $a^* = \arg \max_a Q(s, a)$ the $\epsilon$-greedy policy is given by
-\begin{equation} \pi(a|s) =
-\begin{cases}
-\ 1 - \epsilon + \frac{\epsilon}{|A|} & a = a^* \\
-\frac{\epsilon}{|A|} & a \neq a^*
-\end{cases}
-\end{equation}
-where $\epsilon \in [0, 1]$ controls the greediness. The Boltzmann policy is given by
-\begin{equation} \pi(a|s) =
-\frac{e^{\tau Q(s, a)}}{\sum_a e^{\tau Q(s, a)}} 
-\end{equation}
-where $\tau$ is a temperature parameter $\in [0, \infty)$ that controls the greediness. It is common to use a decay rate on the parameters controlling the greediness to make the algorithm more greedy as the environment is further explored. To guarantee convergence of the algorithm the Robbins and Monro conditions \cite{robbins1951stochastic} on the learning rate must hold:
-\begin{equation}
-\sum_{t=0}^\infty \alpha_t(s, a) = \infty \hspace{5mm} \text{and} \hspace{5mm} \sum_{t=0}^\infty \alpha_t^2(s, a) < \infty, \ \forall \ s, a.
-\end{equation}
-One such method of choosing the iterates that is common is to let the learning rate be ${\alpha_t(s, a) = 1/N_t(s, a)}$ where $N_t(s, a)$ is the number of times action $a$ has been taken from state $s$. The Q-learning update applying the value function to the temporal difference is given as follows:
-\begin{equation}
-Q_{t+1}(s_t, a_t) = Q_t(s_t, a_t) + \alpha_t(s_t, a_t)\left[u(r_t + \gamma \max_a Q_t(s_{t+1}, a_t) - Q_t(s_t, a_t))\right].
-\end{equation}
-See Section \ref{value} for value functions we consider as the nonlinear transformation $u$.
-
-
-
-\subsection{Value Functions}\label{value}
-We explore several functions that capture risk-sensitive decision making including a prospect theory value function \cite{tversky1992advances} and a logarithm-based value function \cite{mazumdar:2017aa}. The prospect value function is given by:
-\begin{equation}u(y) = 
-\begin{cases}
-c_+ (y)^{\rho^+} & y > 0 \\
--c_- (-y)^{\rho^+} & y \leq 0 \\
-\end{cases}
-\end{equation}
-and the logarithm based value function is given by:
-\begin{equation}u(y) = 
-\begin{cases}
-c_+ \log(1 + \rho^+y)& y > 0 \\
--c_- \log(1 - \rho^+y) & y \leq 0 \\
-\end{cases}
-\end{equation}
-where we are setting the reference point to be 0. The parameters $(c_+, c_-, \rho+, \rho_-)$ control the degree of risk-sensitivity and loss aversion. Typically human decision makers have $0 < \rho_+, \rho_- < 1$. This leads to leads to risk-averse preferences in gains and risk-seeking preferences in losses. In terms of the shape of the function these preferences correspond to concavity in gains and convexity in losses.
-
-
-
-\subsection{Further Simulation Results}\label{sim}
-Further simulation results are given in Fig.~\ref{fig:sim_more}. In particular we show the reward at each episode which we see see quickly goes towards being optimal, the value of $\epsilon$ from using the $\epsilon$-greedy with decay policy, and learning rate using decay for a state.
-\begin{figure}[H]
-    \centering
-    \subfloat[][Episode Returns.]{\includegraphics[width=0.33\linewidth]{../figs/Episode_Returns}\label{fig:sim3}}\hfill
-    \subfloat[][Epsilon choices.]{\includegraphics[width=0.33\linewidth]{../figs/Epsilon_Parameters}\label{fig:sim4}}
-    \subfloat[][Learning rate choices.]{\includegraphics[width=0.33\linewidth]{../figs/State_Step_Choices}\label{fig:sim5}}
-    \caption{Detailed Simulation Results.}
-    \label{fig:sim_more}
-\end{figure}
 
 \subsection{Taxi MDP Model Description}\label{mdp}
 \subsubsection{State Space}
@@ -267,55 +296,219 @@ where $t_{\text{\sn{seek}}}(i,j)$ is a random variable for the time to travel an
 \subsubsection{Initial State}
 The intial state for the taxi will be $x_0=(i,\e,r_0)$ where $i$ is the node or
 zone which the taxi most frequently starts in and $r_0\in \mc{R}_0=[0,b_0)$. It always starts in the empty state.
+\section{Future Work}
+As the final deadline approaches we will work on towards the following experiments and goals. First and foremost, utilizing the underlying MDP framework that we have designed for taxi drivers we will investigate the divergence between the empirical policy of drivers found in the data and the optimal policy found with a standard q-learning formulation. This will be allow us to determine whether drivers have learned to maximize their expected earnings. We will then explore the risk-sensitive q-learning formulation, and with the value functions we examine, attempt to find parameters which produce a policy that gives low KL divergence with the empirical policy. If we can do this successfully, it will allow us to characterize how drivers weigh decisions and their risk preferences. Time permitting, we will then explore the risk-sensitive inverse reinforcement learning problem in Grid-World and then in the taxi dataset. 
+
+\bibliographystyle{unsrtnat}
+\bibliography{bibtex}
+
+
+\newpage
+{\center\Large\bfseries APPENDIX\par}
+\renewcommand\thesection{\Alph{section}}
+\setcounter{section}{0}
+
+
+\section{Risk-Sensitive Decision Making Example}\label{example}
+A prevalent example to demonstrate how risk factors into human-decision making including warping of the probability of events as well as losses being weighed more significantly than gains is as follows. When asked to choose between being given \$90 or having a 10\% chance of winning \$100 and a 90\% chance of winning \$0 most people will choose to take the guaranteed \$90. When this question is framed as a loss however, i.e. to choose between losing \$90 or having a 10\% chance of losing \$0 and a 90\% chance of losing \$100, most will choose to risk an increased loss for a chance at no loss. A rational, risk-neutral decision maker would be indifferent to the options in both framings of the question since the expected value of each option is the same.
+
+\section{Bellman Optimality Conditions Derivation}\label{bellman}
+The bellman optimality conditions represent that the value of a state under an optimal policy must be equal to the expected return for the best action from the state. The derivations follow from the Bellman equations.
+\begin{equation}
+\begin{split}
+v_*(s) &= \underset{a \in A}{\text{max}} \ q_{\pi_*}(s,a) \\
+&= \underset{a}{\text{max}} \ \mathbb{E}_{\pi^*}[\sum_{k=0}^\infty \gamma^k R_{t + k+ 1}|S_t = s, A_t =a] \\
+&= \underset{a}{\text{max}} \ \mathbb{E}_{\pi^*}[R_{t+1} + \gamma \sum_{k=0}^\infty \gamma^k R_{t + k+ 2}|S_t = s, A_t =a] \\
+&= \underset{a}{\text{max}} \ \mathbb{E}[R_{t+1} + \gamma v_*(S_{t+1})|S_t = s, A_t =a] \\
+&= \underset{a}{\text{max}} \ \sum_{s', r'}p(s', r'|s,a)[r' + \gamma v_*(s')], \\
+\end{split}
+\end{equation}
+The bellman optimality equation for $q_*$ is then 
+\begin{equation}
+\begin{split}
+q_*(s,a) &= \mathbb{E}[R_{t+1} + \gamma \underset{a'}{\text{max}} \ q_*(S_{t+1}, a')|S_t =s, A_t=a] \\
+&= \sum_{s', r'}p(s', r'|s,a)[r' + \gamma \underset{a'}{\text{max}} \ q_*(s',a')].
+\end{split}
+\end{equation}
+
+\section{Model Based RL Algorithms}\label{sec:model_appendix}
+\begin{algorithm}[H]
+\caption{Value Iteration}\label{euclid}
+\hspace*{\algorithmicindent} \textbf{Input:} $p$ - the probability distribution for the MDP, $r$ - the reward distribution for the MDP, $\gamma$ - the discount factor. \\
+\hspace*{\algorithmicindent} \textbf{Output:} Learned value function $v \approx v^*$ and learned policy $\pi \approx \pi^*$.
+\begin{algorithmic}[1]
+\Procedure{ValueIteration($\pi$, $\gamma$)}{}
+\State \textbf{Initialize:} $v(s) = 0, \ \forall \ s \in S^+$
+\While{$\text{True}$}
+\State $\delta \gets 0$ 
+\For{$s \in S$}
+\State $v_{temp} \gets v(s)$
+\State $v(s) \gets \underset{a}{\text{max}} \sum_{s', r}p(s',r|s,a)[r(s,a,s') + \gamma v(s')]$
+\State $\delta \gets \text{max}(\delta, |v_{temp} - v(s)|)$
+\EndFor
+\If{$\delta < \epsilon$}
+\State \text{break}
+\EndIf
+\EndWhile
+\State $\pi \gets \underset{a}{\text{argmax}} \ \sum_{s',r} p(s',r|s,a)[r(s,a,s') + \gamma v(s')], \ \forall \ s$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Risk-Sensitive Q-Learning Description}\label{alg_desc}
+Q-learning is an off-policy method, meaning the policy being learned is not the policy that is being sampled from when choosing actions to interact with the environment. The policy that is being followed must be proper, meaning that all states are visited infinitely often. Two such proper policies are the $\epsilon$-greedy policy and the Boltzmann policy. Each of these methods trades off exploration and exploitation. Given the greedy action $a^* = \arg \max_a Q(s, a)$ the $\epsilon$-greedy policy is given by
+\begin{equation} \pi(a|s) =
+\begin{cases}
+\ 1 - \epsilon + \frac{\epsilon}{|A|} & a = a^* \\
+\frac{\epsilon}{|A|} & a \neq a^*
+\end{cases}
+\end{equation}
+where $\epsilon \in [0, 1]$ controls the greediness. The Boltzmann policy is given by
+\begin{equation} \pi(a|s) =
+\frac{e^{\tau Q(s, a)}}{\sum_a e^{\tau Q(s, a)}} 
+\end{equation}
+where $\tau$ is a temperature parameter $\in [0, \infty)$ that controls the greediness. It is common to use a decay rate on the parameters controlling the greediness to make the algorithm more greedy as the environment is further explored. To guarantee convergence of the algorithm the Robbins and Monro conditions \cite{robbins1951stochastic} on the learning rate must hold:
+\begin{equation}
+\sum_{t=0}^\infty \alpha_t(s, a) = \infty \hspace{5mm} \text{and} \hspace{5mm} \sum_{t=0}^\infty \alpha_t^2(s, a) < \infty, \ \forall \ s, a.
+\end{equation}
+One such method of choosing the iterates that is common is to let the learning rate be ${\alpha_t(s, a) = 1/N_t(s, a)}$ where $N_t(s, a)$ is the number of times action $a$ has been taken from state $s$. The Q-learning update applying the value function to the temporal difference is given as follows:
+\begin{equation}
+Q_{t+1}(s_t, a_t) = Q_t(s_t, a_t) + \alpha_t(s_t, a_t)\left[u(r_t + \gamma \max_a Q_t(s_{t+1}, a_t) - Q_t(s_t, a_t))\right].
+\end{equation}
+See Section \ref{value} for value functions we consider as the nonlinear transformation $u$.
+
+
+
+\subsection{Value Functions}\label{value}
+We explore several functions that capture risk-sensitive decision making including a prospect theory value function \cite{tversky1992advances} and a logarithm-based value function \cite{mazumdar:2017aa}. The prospect value function is given by:
+\begin{equation}u(y) = 
+\begin{cases}
+c_+ (y)^{\rho^+} & y > 0 \\
+-c_- (-y)^{\rho^+} & y \leq 0 \\
+\end{cases}
+\end{equation}
+and the logarithm based value function is given by:
+\begin{equation}u(y) = 
+\begin{cases}
+c_+ \log(1 + \rho^+y)& y > 0 \\
+-c_- \log(1 - \rho^+y) & y \leq 0 \\
+\end{cases}
+\end{equation}
+where we are setting the reference point to be 0. The parameters $(c_+, c_-, \rho+, \rho_-)$ control the degree of risk-sensitivity and loss aversion. Typically human decision makers have $0 < \rho_+, \rho_- < 1$. This leads to leads to risk-averse preferences in gains and risk-seeking preferences in losses. In terms of the shape of the function these preferences correspond to concavity in gains and convexity in losses.
+
+
+
+\subsection{Further Simulation Results}\label{sim}
+Further simulation results are given in Fig.~\ref{fig:sim_more}. In particular we show the reward at each episode which we see see quickly goes towards being optimal, the value of $\epsilon$ from using the $\epsilon$-greedy with decay policy, and learning rate using decay for a state.
+\begin{figure}[H]
+    \centering
+    \subfloat[][Episode Returns.]{\includegraphics[width=0.33\linewidth]{../paper_figs/Episode_Returns}\label{fig:sim3}}\hfill
+    \subfloat[][Epsilon choices.]{\includegraphics[width=0.33\linewidth]{../paper_figs/Epsilon_Parameters}\label{fig:sim4}}
+    \subfloat[][Learning rate choices.]{\includegraphics[width=0.33\linewidth]{../paper_figs/State_Step_Choices}\label{fig:sim5}}
+    \caption{Detailed Simulation Results.}
+    \label{fig:sim_more}
+\end{figure}
 
 
 \subsection{Further Figures}
-\begin{figure}[H]
-    \centering
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/q_value_neutral}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/q_value_low}\label{fig:sim2}}\vfill
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/q_value_mid}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/q_value_high}\label{fig:sim2}}\vfill
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/value_neutral}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/value_low}\label{fig:sim2}}\vfill
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/value_mid}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/value_high}\label{fig:sim2}}
-    \caption{Risk Sensitive Q-learning results.}
-    \label{fig:sim}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/q_value_neutral}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/q_value_low}\label{fig:sim2}}\vfill
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/q_value_mid}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/q_value_high}\label{fig:sim2}}\vfill
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/value_neutral}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/value_low}\label{fig:sim2}}\vfill
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/value_mid}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/value_high}\label{fig:sim2}}
+%     \caption{Risk Sensitive Q-learning results.}
+%     \label{fig:sim}
+% \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/entropic_low}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/entropic_high}\label{fig:sim2}}
-    \caption{Risk Sensitive Q-learning results.}
-    \label{fig:sim}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/entropic_low}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/entropic_high}\label{fig:sim2}}
+%     \caption{Risk Sensitive Q-learning results.}
+%     \label{fig:sim}
+% \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/entropic_policy_low}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/entropic_policy_high}\label{fig:sim2}}
-    \caption{Risk Sensitive Q-learning results.}
-    \label{fig:sim}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/entropic_policy_low}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/entropic_policy_high}\label{fig:sim2}}
+%     \caption{Risk Sensitive Q-learning results.}
+%     \label{fig:sim}
+% \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/entropic_q_value_high}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/entropic_q_value_low}\label{fig:sim2}}\vfill
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/entropic_value_high}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/entropic_value_low}\label{fig:sim2}}
-    \label{fig:sim}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/entropic_q_value_high}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/entropic_q_value_low}\label{fig:sim2}}\vfill
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/entropic_value_high}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/entropic_value_low}\label{fig:sim2}}
+%     \label{fig:sim}
+% \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../figs/trip_visualization}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../figs/heatmap}\label{fig:sim2}}
-    \caption{Risk Sensitive Q-learning results.}
-    \label{fig:sim}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/trip_visualization}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/heatmap}\label{fig:sim2}}
+%     \caption{Risk Sensitive Q-learning results.}
+%     \label{fig:sim}
+% \end{figure}
+
+\section{Algorithms}
+\subsection{Model-Based}
+\begin{itemize}
+\item Iterative Policy Evaluation
+\item Policy Iteration
+\item Value Iteration
+\item Q-Value Iteration
+\end{itemize}
+
+\subsection{Model-Free}
+\begin{itemize}
+\item One-Step Temporal Differences
+\item Sarsa (On Policy Temporal Difference Learning)
+\item Q-Learning (Off Policy Temporal Difference Learning)
+\end{itemize}
+\subsubsection{Risk-Sensitive Reinforcement Learning}
+\begin{itemize}
+\item Expected Utility Q-Learning (Nonlinear Mapping of Rewards with Value Function)
+\item Risk-Sensitive Q-Learning (Nonlinear Mapping of Temporal Differences with Value Function)
+\end{itemize}
+\subsubsection{Value Functions}
+\begin{itemize}
+\item Prospect Theory Value Function
+\item Logarithmic Value Function
+\item Entropic Value Function
+\end{itemize}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\linewidth]{../paper_figs/policy_evaluation}
+%     \label{fig:policy_evaluation}
+%     \caption{Iterative Policy Evaluation.}
+% \end{figure}
+
+
+% \begin{figure}[H]
+%     \centering
+%     \subfloat[][Q-value Iteration.]{\includegraphics[width=.33\linewidth]{../paper_figs/q_value_iteration_simple}\label{fig:q_value_iteration_simple}}\hfill
+%     \subfloat[][Sarsa.]{\includegraphics[width=.33\linewidth]{../paper_figs/sarsa}\label{fig:sarsa}}
+%     \subfloat[][Q-Learning.]{\includegraphics[width=.33\linewidth]{../paper_figs/q_learning_simple}\label{fig:q_learning_simple}}
+%     \caption{Q-learning results.}
+%     \label{fig:q}
+% \end{figure}
+
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=.5\linewidth]{../paper_figs/one_step_td}
+%     \label{fig:one_step_td}
+%     \caption{One Step Temporal Difference.}
+% \end{figure}
 \end{document}
 
 

@@ -1,0 +1,30 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Markov Decision Process}{}% 2
+\BOOKMARK [1][-]{section.3}{Model Based Reinforcement Learning}{}% 3
+\BOOKMARK [1][-]{section.4}{Model Free Reinforcement Learning}{}% 4
+\BOOKMARK [1][-]{section.5}{Risk-Sensitive Reinforcement Learning}{}% 5
+\BOOKMARK [2][-]{subsection.5.1}{Algorithm}{section.5}% 6
+\BOOKMARK [2][-]{subsection.5.2}{Simulations}{section.5}% 7
+\BOOKMARK [1][-]{section.6}{New York Taxi Dataset}{}% 8
+\BOOKMARK [2][-]{subsection.6.1}{Data Description}{section.6}% 9
+\BOOKMARK [2][-]{subsection.6.2}{MDP Formulation for Taxi Drivers}{section.6}% 10
+\BOOKMARK [2][-]{subsection.6.3}{Data Preprocessing}{section.6}% 11
+\BOOKMARK [2][-]{subsection.6.4}{Taxi MDP Model Description}{section.6}% 12
+\BOOKMARK [3][-]{subsubsection.6.4.1}{State Space}{subsection.6.4}% 13
+\BOOKMARK [3][-]{subsubsection.6.4.2}{Action Space}{subsection.6.4}% 14
+\BOOKMARK [3][-]{subsubsection.6.4.3}{Transition Kernel}{subsection.6.4}% 15
+\BOOKMARK [3][-]{subsubsection.6.4.4}{Reward Function}{subsection.6.4}% 16
+\BOOKMARK [3][-]{subsubsection.6.4.5}{Initial State}{subsection.6.4}% 17
+\BOOKMARK [1][-]{section.7}{Future Work}{}% 18
+\BOOKMARK [1][-]{section.1}{Risk-Sensitive Decision Making Example}{}% 19
+\BOOKMARK [1][-]{section.2}{Bellman Optimality Conditions Derivation}{}% 20
+\BOOKMARK [1][-]{section.3}{Model Based RL Algorithms}{}% 21
+\BOOKMARK [2][-]{subsection.3.1}{Risk-Sensitive Q-Learning Description}{section.3}% 22
+\BOOKMARK [2][-]{subsection.3.2}{Value Functions}{section.3}% 23
+\BOOKMARK [2][-]{subsection.3.3}{Further Simulation Results}{section.3}% 24
+\BOOKMARK [2][-]{subsection.3.4}{Further Figures}{section.3}% 25
+\BOOKMARK [1][-]{section.4}{Algorithms}{}% 26
+\BOOKMARK [2][-]{subsection.4.1}{Model-Based}{section.4}% 27
+\BOOKMARK [2][-]{subsection.4.2}{Model-Free}{section.4}% 28
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Risk-Sensitive Reinforcement Learning}{subsection.4.2}% 29
+\BOOKMARK [3][-]{subsubsection.4.2.2}{Value Functions}{subsection.4.2}% 30
