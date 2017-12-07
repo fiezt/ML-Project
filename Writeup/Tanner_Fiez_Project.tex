@@ -50,9 +50,16 @@
   \texttt{fiezt@uw.edu} \\
 }
 
+
 \begin{document}
 
 \maketitle
+
+% \begin{abstract}
+% start of abstract
+% \end{abstract}
+
+
 \section{Introduction}
 Reinforcement learning (RL) is a subfield of machine learning that focuses on learning from interactions. The core idea of RL is that an agent learns through the consequences of actions instead of being explicitly taught how to act. Actions are chosen based on past experience and new choices, which can be thought of as learning through trial and error. Inherently this forces a tradeoff between exploitation and exploration that must be solved. This style of learning has often been traced to how humans learn. With each choice we make, feedback from the environment---positive or negative---provides information on how to make future choices. In computer science this abstraction is often ignored and the focus is on computational approaches to learning from interactions. 
 
@@ -263,104 +270,104 @@ Finally, we note that to guarantee convergence of the algorithm the Robbins and 
 % \end{figure}
 
 
-% \section{New York Taxi Dataset}\label{sec:taxi}
-% \subsection{Data Description}
-% The New York Taxi Dataset covers taxi operations from $2010$--$2013$, in total there are nearly $700$ million recorded trips. The data is stored in separate CSV files for each month. We will analyze a subset of the drivers and over only a few months. Each row in a file contains the information for a trip record. The key information that is contained is the hack license (driver ID), pickup date-time, dropoff date-time, trip time in seconds, trip distance in miles, GPS coordinates at the starting location, GPS coordinates at the ending location, total fare including tip, and the total cost of tolls.
-% \subsection{MDP Formulation for Taxi Drivers}
-% We model a taxi driver as acting according to a finite MDP where an episode corresponds to a single days work. The complete formulation is given in Section \ref{mdp}. They salient features of the formulation are:
-% \begin{itemize}
-% \item Each state is a tuple containing the node the driver is in--we discretized location into a grid using district boundaries for New York City--an indicator of whether the taxi currently is full (just picked up passengers) or empty (just dropped off passengers), and the cumulative reward interval the driver is in--we discretized the reward intervals assuming that how a driver behaves may be a function of the earnings at a point in the workday.
-% \item Actions are moving between nodes in the location grid we created.
-% \item The reward functions use values derived from the data, such as earning rate, the expected time searching for a passenger, and the fare between grid nodes. The transition probabilities use empirical transition probabilities as well as expected earning rates. 
-% \end{itemize}
-% \subsection{Data Preprocessing}
-% The data required a significant amount of preprocessing to clean the data and obtain the needed quantities for the MDP formulation. This dataset has been used a fair amount for research and there are some well documented errors. In fact, it was estimated by the folks who obtained the data that nearly $10\%$ of trips contained erroneous information. Below are some of the things we did to clean the data:
-% \begin{itemize}
-% \item The trip time reported is often inaccurate. To compensate for this we calculate the trip time using the difference between the reported pickup and dropoff time.
-% \item We drop the following trip instances: trips that occur in which the GPS coordinates are not in New York, trip times that are extremely short to the point of being infeasible, and trips with extremely low (less than \$.30 a minute) or extremely high (greater than \$20 an hour) earning rates.
-% \end{itemize}
-% These are only a subset of the issues with the data that we cleaned but these are the most significant and well documented from previous work with the data. 
+\section{New York Taxi Dataset}\label{sec:taxi}
+\subsection{Data Description}
+The New York Taxi Dataset covers taxi operations from $2010$--$2013$, in total there are nearly $700$ million recorded trips. The data is stored in separate CSV files for each month. We will analyze a subset of the drivers and over only a few months. Each row in a file contains the information for a trip record. The key information that is contained is the hack license (driver ID), pickup date-time, dropoff date-time, trip time in seconds, trip distance in miles, GPS coordinates at the starting location, GPS coordinates at the ending location, total fare including tip, and the total cost of tolls.
+\subsection{MDP Formulation for Taxi Drivers}
+We model a taxi driver as acting according to a finite MDP where an episode corresponds to a single days work. The complete formulation is given in Section \ref{mdp}. They salient features of the formulation are:
+\begin{itemize}
+\item Each state is a tuple containing the node the driver is in--we discretized location into a grid using district boundaries for New York City--an indicator of whether the taxi currently is full (just picked up passengers) or empty (just dropped off passengers), and the cumulative reward interval the driver is in--we discretized the reward intervals assuming that how a driver behaves may be a function of the earnings at a point in the workday.
+\item Actions are moving between nodes in the location grid we created.
+\item The reward functions use values derived from the data, such as earning rate, the expected time searching for a passenger, and the fare between grid nodes. The transition probabilities use empirical transition probabilities as well as expected earning rates. 
+\end{itemize}
+\subsection{Data Preprocessing}
+The data required a significant amount of preprocessing to clean the data and obtain the needed quantities for the MDP formulation. This dataset has been used a fair amount for research and there are some well documented errors. In fact, it was estimated by the folks who obtained the data that nearly $10\%$ of trips contained erroneous information. Below are some of the things we did to clean the data:
+\begin{itemize}
+\item The trip time reported is often inaccurate. To compensate for this we calculate the trip time using the difference between the reported pickup and dropoff time.
+\item We drop the following trip instances: trips that occur in which the GPS coordinates are not in New York, trip times that are extremely short to the point of being infeasible, and trips with extremely low (less than \$.30 a minute) or extremely high (greater than \$20 an hour) earning rates.
+\end{itemize}
+These are only a subset of the issues with the data that we cleaned but these are the most significant and well documented from previous work with the data. 
 
-% There are also a couple of important things we do to create the MDP which we make note of. Drivers work abnormal hours, i.e. the typical driver begins work in the evening and works until the early morning hours. In light of this we shift all transaction times back by 12 hours so that we can observe the full workday within a single date. We estimate the time spent searching for a new trip as the time from dropoff to pickup, but if this time exceeds 20 we assume the driver was taking a break.
+There are also a couple of important things we do to create the MDP which we make note of. Drivers work abnormal hours, i.e. the typical driver begins work in the evening and works until the early morning hours. In light of this we shift all transaction times back by 12 hours so that we can observe the full workday within a single date. We estimate the time spent searching for a new trip as the time from dropoff to pickup, but if this time exceeds 20 we assume the driver was taking a break.
 
-% \subsection{Taxi MDP Model Description}\label{mdp}
-% \subsubsection{State Space}
-% The state space is
-% \[\mc{X}=\{\mc{N}\cup\{x_f\}\times\mc{S}\times \mc{R}\}\backslash \mc{X}_{na}\]
-% where
-% \begin{itemize}
-% \item $x_f$ is the terminal state representing the taxi being done for the period,
+\subsection{Taxi MDP Model Description}\label{mdp}
+\subsubsection{State Space}
+The state space is
+\[\mc{X}=\{\mc{N}\cup\{x_f\}\times\mc{S}\times \mc{R}\}\backslash \mc{X}_{na}\]
+where
+\begin{itemize}
+\item $x_f$ is the terminal state representing the taxi being done for the period,
 
-% \item $\mc{N}$ be the index set for the zones or nodes in the city with $N$ nodes,
+\item $\mc{N}$ be the index set for the zones or nodes in the city with $N$ nodes,
 
-% \item $\mc{S}=\{${\e, \f}$\}$ is an indicator of if the taxi is \e=empty or \f=full, and
+\item $\mc{S}=\{${\e, \f}$\}$ is an indicator of if the taxi is \e=empty or \f=full, and
 
-% \item $\mc{R}$ is the discretized cumulative fare value space which has the
-% structure \[\mc{R}=\{\mc{R}_1\}\cup\cdots\cup\{\mc{R}_m\}\cup\{\mc{R}_f\}\]
-% where $\mc{R}_i=[a_i,b_i]$ with $a_1< b_1\leq a_2<b_2 \cdots \leq a_m<
-% b_m=\bar{r}$ and $\mc{R}_f=[\bar{r}, \infty)$ where $\bar{r}$ is some reference point for period earnings (e.g., if the period of investigation is a day, then this is the daily earnings reference point).
+\item $\mc{R}$ is the discretized cumulative fare value space which has the
+structure \[\mc{R}=\{\mc{R}_1\}\cup\cdots\cup\{\mc{R}_m\}\cup\{\mc{R}_f\}\]
+where $\mc{R}_i=[a_i,b_i]$ with $a_1< b_1\leq a_2<b_2 \cdots \leq a_m<
+b_m=\bar{r}$ and $\mc{R}_f=[\bar{r}, \infty)$ where $\bar{r}$ is some reference point for period earnings (e.g., if the period of investigation is a day, then this is the daily earnings reference point).
 
-% \item $\mc{X}_{na}$ are the states not allowed and is defined by
-% \[\mc{X}_{na}=\{(x_f,\f,r), r\in \mc{R}\}\cup\{(x_f,\e,r), r\notin\mc{R}_f\}\]
-% \end{itemize}
+\item $\mc{X}_{na}$ are the states not allowed and is defined by
+\[\mc{X}_{na}=\{(x_f,\f,r), r\in \mc{R}\}\cup\{(x_f,\e,r), r\notin\mc{R}_f\}\]
+\end{itemize}
    
-% A state $(i,s,r)\in \mc{N}\times\mc{S}\times \mc{R}$ indicates the taxi
-% is in node $i$ (or terminal state $x_f$ if $i=x_f$), has a empty/full state of $s$ and has current cumulative
-% fare value $r$. The terminal state is reached when the fare value portion of the
-% state is greater than or equal to $\bar{r}$. 
+A state $(i,s,r)\in \mc{N}\times\mc{S}\times \mc{R}$ indicates the taxi
+is in node $i$ (or terminal state $x_f$ if $i=x_f$), has a empty/full state of $s$ and has current cumulative
+fare value $r$. The terminal state is reached when the fare value portion of the
+state is greater than or equal to $\bar{r}$. 
 
-% The dimension of the state space is thus, 
-% \[(\dim(\mc{N})+\dim(\{x_f\}))\times\dim(\mc{S})\times\dim(\mc{R})-|\mc{X}_{na}|.\]
-
-
-% \subsubsection{Action Space}
-% Let $\mc{U}=\mc{U}_a\cup\{\emptyset\}$ where
-% $\mc{U}_a=\{u_{i\mapsto j}, (i,j)\in \mc{N}\times \mc{N}\}$ be the action space where $u_{i\mapsto j}$ indicates the choice of going from node $i$ to node $j$ and where $\emptyset$ is the null action. The admissible actions are state dependent. In particular, if the state is $x=(i,\e,r)$ for any $i\in
-% \mc{N}$ and any cumulative fare value $r\in\mc{R}$, then $\mc{U}(i,\e,r)=\{u_{i\mapsto j}, (i,j)\in \mc{N}\times \mc{N}\}$ and, on the other hand, if $x=(i,\f,r)$ for any $i\in \mc{N}$ and any cumulative fare value $r\in\mc{R}$, then
-% $\mc{U}(i,\f,r)=\{\emptyset\}$ indicating that the taxi is currently full and is taking a ride from node $i$ to node $k$ with probability $\Pdest(i,k)$ (i.e.~the probability that a fare picked up in node $i$ will want to go to node $k$).
-
-% \subsubsection{Transition Kernel}
-% Let $\mc{P}: \mc{X}\times \mc{U}\times\mc{X}\rar [0,1]$ be the transition kernel such that $\mc{P}(x_{t},u_t, x_{t+1})$ is the probability that state $x_t$ will transition to state $x_{t+1}$ given action $u_t$. Let's consider the different cases. 
-% \begin{itemize}
-% \item First let's look at the $\e$ to $\e$ transitions for all other state action pairs:
-% \[\mc{P}( (i,\e,r),u,(j,\e,r'))=\left\{\begin{array}{ll} 1, & \ \text{if}\ r,r'\in \mc{R}_f\ \text{\&}\ \{i\in \mc{N},j=x_f\}\vee\{i=x_f,j=x_f\}\\
-% 0, & \ \text{otherwise}\end{array}\right.\]
-
-% \item Now let's look at the $\f$ to $\f$ transitions for all other state action pairs:
-
-% \[\mc{P}( (i,\f,r),u,(j,\f,r'))=0\]
-% \item Next we will look at the $\f$ to $\e$ transitions for all other state action pairs:
-% \[\mc{P}((i,\f,r),u,(j,\e,r'))=\left\{\begin{array}{ll}
-% \Pdest(i,j)P(E[F(i,j)]+r\geq a_l)\ & \ \text{if}\ r'\in \mc{R}_l, r'\geq r\ \text{\&}\ i,j\in \mc{N}\\ 0, & \ \text{otherwise} \end{array}\right.\]
-% where $a_l$ is the lower bound on the interval
-% $\mc{R}_l=[a_l,b_l)$
-% \item Finally we look at the $\e$ to $\f$ transitions (these are all ones where the choices of action dictates the transition probability)
-
-% \[\mc{P}( (i,\e,r),u,(j,\f,r'))=\left\{\begin{array}{ll} 1, & \ \text{if}\ u=u_{i\mapsto j}\ \text{\&}\ r=r', r\notin \mc{R}_f\\
-% 0, & \ \text{otherwise}\end{array}\right.\]
-% \end{itemize}
-
-% \subsubsection{Reward Function}
-% The reward function is a map $R:\mc{X}\times \mc{U}\times \mc{X}\times \rar \mb{R}$ with $R(x_{t},u_t,x_{t+1})$ a random variable such that
-% \begin{itemize}
-% \item The reward for $\f$ to $\e$ is 
-
-% \[R( (i,\f,r), u, (j,\e,r'))=\left\{\begin{array}{ll}F(i,j), & \ \text{if}\ i,j\in \mc{N}, u=\emptyset, r'\geq r\\ 0, & \ \text{otherwise}\end{array}\right.\]
-% where $F(i,j)$ is a random variable representing the fare from $i$ to $j$. 
+The dimension of the state space is thus, 
+\[(\dim(\mc{N})+\dim(\{x_f\}))\times\dim(\mc{S})\times\dim(\mc{R})-|\mc{X}_{na}|.\]
 
 
-% \item The reward for $\e$ to $\f$ is 
-% \[R((i,\f,r), u, (j,\e,r'))=\left\{\begin{array}{ll}-t_{\text{\sn{seek}}}(i,j)/E(i,j)^{-1}, & \ \text{if}\ i,j\in \mc{N}, u=u_{i\mapsto j}, r=r'\notin \mc{R}_f\\
-% 0, & \ \text{otherwise}\end{array}\right.\]
+\subsubsection{Action Space}
+Let $\mc{U}=\mc{U}_a\cup\{\emptyset\}$ where
+$\mc{U}_a=\{u_{i\mapsto j}, (i,j)\in \mc{N}\times \mc{N}\}$ be the action space where $u_{i\mapsto j}$ indicates the choice of going from node $i$ to node $j$ and where $\emptyset$ is the null action. The admissible actions are state dependent. In particular, if the state is $x=(i,\e,r)$ for any $i\in
+\mc{N}$ and any cumulative fare value $r\in\mc{R}$, then $\mc{U}(i,\e,r)=\{u_{i\mapsto j}, (i,j)\in \mc{N}\times \mc{N}\}$ and, on the other hand, if $x=(i,\f,r)$ for any $i\in \mc{N}$ and any cumulative fare value $r\in\mc{R}$, then
+$\mc{U}(i,\f,r)=\{\emptyset\}$ indicating that the taxi is currently full and is taking a ride from node $i$ to node $k$ with probability $\Pdest(i,k)$ (i.e.~the probability that a fare picked up in node $i$ will want to go to node $k$).
 
-% where $t_{\text{\sn{seek}}}(i,j)$ is a random variable for the time to travel and find a fare when you go from node $i$ to $j$ under the control action $u_{i\mapsto j}$ and where $E(i,j)$ is a random variable for the earning rate for trips from $i$ to $j$. In practice, we infer the mean values of these quantities from the data.
-% \end{itemize}
+\subsubsection{Transition Kernel}
+Let $\mc{P}: \mc{X}\times \mc{U}\times\mc{X}\rar [0,1]$ be the transition kernel such that $\mc{P}(x_{t},u_t, x_{t+1})$ is the probability that state $x_t$ will transition to state $x_{t+1}$ given action $u_t$. Let's consider the different cases. 
+\begin{itemize}
+\item First let's look at the $\e$ to $\e$ transitions for all other state action pairs:
+\[\mc{P}( (i,\e,r),u,(j,\e,r'))=\left\{\begin{array}{ll} 1, & \ \text{if}\ r,r'\in \mc{R}_f\ \text{\&}\ \{i\in \mc{N},j=x_f\}\vee\{i=x_f,j=x_f\}\\
+0, & \ \text{otherwise}\end{array}\right.\]
 
-% \subsubsection{Initial State}
-% The intial state for the taxi will be $x_0=(i,\e,r_0)$ where $i$ is the node or
-% zone which the taxi most frequently starts in and $r_0\in \mc{R}_0=[0,b_0)$. It always starts in the empty state.
-% \section{Future Work}
-% As the final deadline approaches we will work on towards the following experiments and goals. First and foremost, utilizing the underlying MDP framework that we have designed for taxi drivers we will investigate the divergence between the empirical policy of drivers found in the data and the optimal policy found with a standard q-learning formulation. This will be allow us to determine whether drivers have learned to maximize their expected earnings. We will then explore the risk-sensitive q-learning formulation, and with the value functions we examine, attempt to find parameters which produce a policy that gives low KL divergence with the empirical policy. If we can do this successfully, it will allow us to characterize how drivers weigh decisions and their risk preferences. Time permitting, we will then explore the risk-sensitive inverse reinforcement learning problem in Grid-World and then in the taxi dataset. 
+\item Now let's look at the $\f$ to $\f$ transitions for all other state action pairs:
+
+\[\mc{P}( (i,\f,r),u,(j,\f,r'))=0\]
+\item Next we will look at the $\f$ to $\e$ transitions for all other state action pairs:
+\[\mc{P}((i,\f,r),u,(j,\e,r'))=\left\{\begin{array}{ll}
+\Pdest(i,j)P(E[F(i,j)]+r\geq a_l)\ & \ \text{if}\ r'\in \mc{R}_l, r'\geq r\ \text{\&}\ i,j\in \mc{N}\\ 0, & \ \text{otherwise} \end{array}\right.\]
+where $a_l$ is the lower bound on the interval
+$\mc{R}_l=[a_l,b_l)$
+\item Finally we look at the $\e$ to $\f$ transitions (these are all ones where the choices of action dictates the transition probability)
+
+\[\mc{P}( (i,\e,r),u,(j,\f,r'))=\left\{\begin{array}{ll} 1, & \ \text{if}\ u=u_{i\mapsto j}\ \text{\&}\ r=r', r\notin \mc{R}_f\\
+0, & \ \text{otherwise}\end{array}\right.\]
+\end{itemize}
+
+\subsubsection{Reward Function}
+The reward function is a map $R:\mc{X}\times \mc{U}\times \mc{X}\times \rar \mb{R}$ with $R(x_{t},u_t,x_{t+1})$ a random variable such that
+\begin{itemize}
+\item The reward for $\f$ to $\e$ is 
+
+\[R( (i,\f,r), u, (j,\e,r'))=\left\{\begin{array}{ll}F(i,j), & \ \text{if}\ i,j\in \mc{N}, u=\emptyset, r'\geq r\\ 0, & \ \text{otherwise}\end{array}\right.\]
+where $F(i,j)$ is a random variable representing the fare from $i$ to $j$. 
+
+
+\item The reward for $\e$ to $\f$ is 
+\[R((i,\f,r), u, (j,\e,r'))=\left\{\begin{array}{ll}-t_{\text{\sn{seek}}}(i,j)/E(i,j)^{-1}, & \ \text{if}\ i,j\in \mc{N}, u=u_{i\mapsto j}, r=r'\notin \mc{R}_f\\
+0, & \ \text{otherwise}\end{array}\right.\]
+
+where $t_{\text{\sn{seek}}}(i,j)$ is a random variable for the time to travel and find a fare when you go from node $i$ to $j$ under the control action $u_{i\mapsto j}$ and where $E(i,j)$ is a random variable for the earning rate for trips from $i$ to $j$. In practice, we infer the mean values of these quantities from the data.
+\end{itemize}
+
+\subsubsection{Initial State}
+The intial state for the taxi will be $x_0=(i,\e,r_0)$ where $i$ is the node or
+zone which the taxi most frequently starts in and $r_0\in \mc{R}_0=[0,b_0)$. It always starts in the empty state.
+\section{Future Work}
+As the final deadline approaches we will work on towards the following experiments and goals. First and foremost, utilizing the underlying MDP framework that we have designed for taxi drivers we will investigate the divergence between the empirical policy of drivers found in the data and the optimal policy found with a standard q-learning formulation. This will be allow us to determine whether drivers have learned to maximize their expected earnings. We will then explore the risk-sensitive q-learning formulation, and with the value functions we examine, attempt to find parameters which produce a policy that gives low KL divergence with the empirical policy. If we can do this successfully, it will allow us to characterize how drivers weigh decisions and their risk preferences. Time permitting, we will then explore the risk-sensitive inverse reinforcement learning problem in Grid-World and then in the taxi dataset. 
 
 \bibliographystyle{unsrtnat}
 \bibliography{bibtex}

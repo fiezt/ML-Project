@@ -2,18 +2,29 @@
 \BOOKMARK [1][-]{section.2}{Markov Decision Process}{}% 2
 \BOOKMARK [1][-]{section.3}{Model Based Reinforcement Learning}{}% 3
 \BOOKMARK [1][-]{section.4}{Model Free Reinforcement Learning}{}% 4
-\BOOKMARK [1][-]{section.1}{Risk-Sensitive Decision Making Example}{}% 5
-\BOOKMARK [1][-]{section.2}{Bellman Optimality Conditions Derivation}{}% 6
-\BOOKMARK [1][-]{section.3}{Model Based RL Algorithms}{}% 7
-\BOOKMARK [1][-]{section.4}{Model Based RL Experiments}{}% 8
-\BOOKMARK [1][-]{section.5}{Model Free RL Algorithms}{}% 9
-\BOOKMARK [1][-]{section.6}{Model Free RL Experiments}{}% 10
-\BOOKMARK [2][-]{subsection.6.1}{Risk-Sensitive Q-Learning Description}{section.6}% 11
-\BOOKMARK [2][-]{subsection.6.2}{Value Functions}{section.6}% 12
-\BOOKMARK [2][-]{subsection.6.3}{Further Simulation Results}{section.6}% 13
-\BOOKMARK [2][-]{subsection.6.4}{Further Figures}{section.6}% 14
-\BOOKMARK [1][-]{section.7}{Algorithms}{}% 15
-\BOOKMARK [2][-]{subsection.7.1}{Model-Based}{section.7}% 16
-\BOOKMARK [2][-]{subsection.7.2}{Model-Free}{section.7}% 17
-\BOOKMARK [3][-]{subsubsection.7.2.1}{Risk-Sensitive Reinforcement Learning}{subsection.7.2}% 18
-\BOOKMARK [3][-]{subsubsection.7.2.2}{Value Functions}{subsection.7.2}% 19
+\BOOKMARK [1][-]{section.5}{New York Taxi Dataset}{}% 5
+\BOOKMARK [2][-]{subsection.5.1}{Data Description}{section.5}% 6
+\BOOKMARK [2][-]{subsection.5.2}{MDP Formulation for Taxi Drivers}{section.5}% 7
+\BOOKMARK [2][-]{subsection.5.3}{Data Preprocessing}{section.5}% 8
+\BOOKMARK [2][-]{subsection.5.4}{Taxi MDP Model Description}{section.5}% 9
+\BOOKMARK [3][-]{subsubsection.5.4.1}{State Space}{subsection.5.4}% 10
+\BOOKMARK [3][-]{subsubsection.5.4.2}{Action Space}{subsection.5.4}% 11
+\BOOKMARK [3][-]{subsubsection.5.4.3}{Transition Kernel}{subsection.5.4}% 12
+\BOOKMARK [3][-]{subsubsection.5.4.4}{Reward Function}{subsection.5.4}% 13
+\BOOKMARK [3][-]{subsubsection.5.4.5}{Initial State}{subsection.5.4}% 14
+\BOOKMARK [1][-]{section.6}{Future Work}{}% 15
+\BOOKMARK [1][-]{section.1}{Risk-Sensitive Decision Making Example}{}% 16
+\BOOKMARK [1][-]{section.2}{Bellman Optimality Conditions Derivation}{}% 17
+\BOOKMARK [1][-]{section.3}{Model Based RL Algorithms}{}% 18
+\BOOKMARK [1][-]{section.4}{Model Based RL Experiments}{}% 19
+\BOOKMARK [1][-]{section.5}{Model Free RL Algorithms}{}% 20
+\BOOKMARK [1][-]{section.6}{Model Free RL Experiments}{}% 21
+\BOOKMARK [2][-]{subsection.6.1}{Risk-Sensitive Q-Learning Description}{section.6}% 22
+\BOOKMARK [2][-]{subsection.6.2}{Value Functions}{section.6}% 23
+\BOOKMARK [2][-]{subsection.6.3}{Further Simulation Results}{section.6}% 24
+\BOOKMARK [2][-]{subsection.6.4}{Further Figures}{section.6}% 25
+\BOOKMARK [1][-]{section.7}{Algorithms}{}% 26
+\BOOKMARK [2][-]{subsection.7.1}{Model-Based}{section.7}% 27
+\BOOKMARK [2][-]{subsection.7.2}{Model-Free}{section.7}% 28
+\BOOKMARK [3][-]{subsubsection.7.2.1}{Risk-Sensitive Reinforcement Learning}{subsection.7.2}% 29
+\BOOKMARK [3][-]{subsubsection.7.2.2}{Value Functions}{subsection.7.2}% 30
