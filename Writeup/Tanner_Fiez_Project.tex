@@ -45,7 +45,6 @@
 
 \author{
   Tanner Fiez \\
-  Department of Electrical Engineering \\
   University of Washington \\
   % Seattle, WA \\
   \texttt{fiezt@uw.edu} \\
@@ -111,7 +110,21 @@ and similarly the value function of a state-action pair $s, a$ under a policy $\
 \begin{equation}
 q_\pi(s, a) = \mb{E}_\pi[\sum_{k=0}^\infty \gamma^k R_{t+k+1}|S_t=s, A_t=a].
 \end{equation}
-Each of these definitions can be unrolled through recursive relationships to give the following equivalent formulations
+An intermediate result that we will make use of later is found by simply removing the first term from the sum in both the state-value function 
+\begin{equation}\label{eq:inter_v}
+\begin{split}
+v_\pi(s) &= \mb{E}_\pi[R_{t+1} + \gamma\sum_{k=0}^\infty \gamma^k R_{t+k+2}|S_t=s], \\
+&= \mb{E}_\pi[R_{t+1} + \gamma v_\pi(S_{t+1})|S_t=s], \\
+\end{split}
+\end{equation}
+and in the state-action value function.
+\begin{equation}\label{eq:inter_q}
+\begin{split}
+q_\pi(s, a) &= \mb{E}_\pi[R_{t+1} + \gamma\sum_{k=0}^\infty \gamma^k R_{t+k+2}|S_t=s, A_t=a], \\
+&= \mb{E}_\pi[R_{t+1} + \gamma q_\pi(S_{t+1}, A_{t+1})|S_t=s, A_t=a]
+\end{split}
+\end{equation}
+Each of these definitions can be completely unrolled through recursive relationships to give the following equivalent formulations
 \begin{equation}
 v_\pi(s) = \sum_a \pi(a|s)\sum_{s',r'}p(s', r'|s, a)[r' + \gamma v_\pi(s')],
 \end{equation}
@@ -141,163 +154,213 @@ The reason such attention was paid to defining the state-value function and the 
 
 Policy iteration sweeps over the state space and alternates between two steps until convergence. These are policy evaluation, given by (\ref{eq:evaluation}), and policy improvement (\ref{eq:improvement}). Value iteration sweeps over the state space and applies the optimality condition in (\ref{eq:v_opt}) until convergence. $q$-value iteration sweeps over the state space and applies the optimality condition in (\ref{eq:q_opt}) until convergence. Each of these algorithms are optimal and will arrive at the same solution.
 
-We now provide results testing these algorithms and demonstrate that grid-world environment we created in Fig.~\ref{fig:model}. To prove that the algorithms are implemented correctly we use a very simple MDP. We designate the state space to be indexes of the grid and actions to be the compass directions $\{N, E, S, W\}$. The transition function is deterministic (actions take the agent to the desired state) with the exception that actions that cause the agent to go off the grid result in the agent staying in the same state with probability $1$ and an agent remains in a terminal state when reached, all transitions incur a reward of $-1$ with the exception transitions to and from a terminal state incur a reward of $0$, and the discount factor is 1. Thus the problem is to find the shortest path to a terminal state from an initial state which would be the Manhattan Distance.
+We now provide results testing these algorithms and demonstrate that grid-world environment. To prove that the algorithms are implemented correctly we use a very simple MDP. We designate the state space to be indexes of the grid and actions to be the compass directions $\{N, E, S, W\}$. The transition function is deterministic (actions take the agent to the desired state) with the exception that actions that cause the agent to go off the grid result in the agent staying in the same state with probability $1$ and an agent remains in a terminal state when reached, all transitions incur a reward of $-1$ with the exception transitions to and from a terminal state incur a reward of $0$, and the discount factor is 1. Thus the problem is to find the shortest path to a terminal state from an initial state which would be the Manhattan Distance.
 \begin{figure}[H]
     \centering
-    \subfloat[][Value Iteration and Policy Iteration.]{\includegraphics[width=.4\linewidth]{../paper_figs/value_iteration}\label{fig:value_iteration_simple}}
-    \subfloat[][$q$-value Iteration.]{\includegraphics[width=.4\linewidth]{../paper_figs/q_value_iteration_simple}\label{fig:q_value_iteration_simple}}
-    \caption{Model Based Algorithms in Grid World}
+    \subfloat[][Value iteration and policy iteration. Arrows indicate the policy in a state and the numbers represent the state values.\label{fig:value_iteration_simple}]{\includegraphics[width=.4\linewidth]{../paper_figs/value_iteration}}\hfill
+    \subfloat[][$q$-value Iteration. Numbers represent the state-action values.\label{fig:q_value_iteration_simple}]{\includegraphics[width=.4\linewidth]{../paper_figs/q_value_iteration_simple}}
+    \caption{Model based algorithms in grid-world.}
     \label{fig:model}
 \end{figure}
 
+Fig.~\ref{fig:model} illustrates the results of the model-based learning algorithms with value and policy iteration in Fig.~\ref{fig:value_iteration_simple} and $q$-value iteration in Fig.~\ref{fig:q_value_iteration_simple}. As was previously mentioned would be the case, each of these methods arrives at the same optimal policy. The evaluation criteria in this setting are the Bellman optimality conditions as well as the cumulative rewards of trials. Because this is a deterministic example we are able to satisfy the Bellman optimality conditions and we will always achieve the maximum possible reward in each trial as a result. For further experiments, including in the OpenAI Gym environment, with model based RL as well as implementation details see Appendix Section~\ref{sec:model_exp_appendix}.
 
+While the algorithms given in this section may appear as the be-all and end-all to RL given that we have shown they are optimal, in reality these methods have significant limitations. This is because as the state space grows very large dynamic programming methods become computationally intractable, creating the need for methods that approximate the Bellman optimality conditions. 
 
 \section{Model Free Reinforcement Learning}\label{sec:model_free}
-Sequential decision making problems can often be formulated as an MDP that can be solved via dynamic programming algorithms such as value iteration, policy iteration, and Q-value iteration. These methods however, require that transition probabilities and event outcomes are known a priori. In practice these quantities are typically unknown and thus a policy must be gradually improved as an agent explores an environment. One of the most popular reinforcement learning algorithms to do this is called Q-learning \cite{sutton1998reinforcement}. The Q-learning algorithm iteratively updates the Q-function, a mapping from state-action pairs to value estimates, by taking steps in the direction of an error-like term called the temporal difference.
+Model based dynamic programming methods face two significant limitations. As touched on previously, they become computationally intractable as the state space grows very large. Another limitation is that complete knowledge of the dynamics are required, yet transition probabilities and event outcomes are often unknown a priori in practice. To make up for these shortcomings, we turn our attention towards approximation methods that gradually improve estimates of the environment and the value functions. These methods are know as model free RL because they operate in an online fashion and require no knowledge at the outset of a problem.
+
+The fundamental concept of model free RL is temporal-difference (TD) learning. TD methods are like dynamic programming methods in that they update value estimates using prior estimates before reaching a final outcome. The difference however, is that updates are made using sample feedback from the environment instead of the idealized model of the environment from the MDP. The TD error term for the state value function is given as follows
+\begin{equation}\label{eq:td_v}
+TD_v = R_{t+1} + \gamma V(S_{t+1}) - V(S_t),
+\end{equation}
+similarly the state-action value function is given by
+\begin{equation}\label{eq:td_q}
+TD_q = R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t).
+\end{equation}
+These quantities may look familiar and indeed we can trace them back to a form of the Bellman equations from (\ref{eq:inter_v}) and (\ref{eq:inter_q}) which we restate for clarity here.
+\begin{equation}\tag{\ref{eq:inter_v}}
+v_\pi(s) = \mb{E}_\pi[R_{t+1} + \gamma v_\pi(S_{t+1})|S_t=s], 
+\end{equation}
+\begin{equation}\tag{\ref{eq:inter_q}}
+q_\pi(s, a) = \mb{E}_\pi[R_{t+1} + \gamma q_\pi(S_{t+1}, A_{t+1})|S_t=s, A_t=a]
+\end{equation}
+It is now evident that the TD terms in equations (\ref{eq:td_v}) and (\ref{eq:td_q}) are sampling from the expected values of the targets from (\ref{eq:inter_v}) and (\ref{eq:inter_q}) and computing the error between the improved estimate of the value function with the current estimate of the value function. Intuitively the TD term can be interpreted as a gradient like term, which then lends naturally to the idea of algorithms using online stochastic gradient descent methods to improve value function estimates. It turns out in fact, that this is exactly how the most basic TD learning algorithms work. We have implemented the three core methods of TD(0), Sarsa, and $q$-learning. The methods differ by the policy that is being sampled from in the TD updates and whether a state value function or a state-action value function is being learned. 
+
+TD(0) learns the state value function of a policy that is given. Meaning given policy $\pi$ the state value function $v_\pi$ is learned by sampling from $\pi$ and updating the state value function as follows:
+\begin{equation}
+V(S) = V(S) + \alpha [R' + \gamma V(S') - V(S)].
+\end{equation}
+Sarsa is an on-policy method, meaning that the policy being followed is the same as the policy being learned, that learns the optimal state-action value function. Typically, the $\epsilon$-greedy policy or the Boltzmann policy is followed. Each of these methods trades off exploration and exploitation. Given the greedy action $a^* = \arg \max_a Q(S, a)$ the $\epsilon$-greedy policy is given by
+\begin{equation} \pi(a|s) =
+\begin{cases}
+\ 1 - \epsilon + \frac{\epsilon}{|A|} & a = a^* \\
+\frac{\epsilon}{|A|} & a \neq a^*
+\end{cases}
+\end{equation}
+where $\epsilon \in [0, 1]$ controls the greediness. The Boltzmann policy is given by
+\begin{equation} \pi(a|s) =
+\frac{e^{\tau Q(s, a)}}{\sum_a e^{\tau Q(s, a)}} 
+\end{equation}
+where $\tau$ is a temperature parameter $\in [0, \infty)$ that controls the greediness. It is common to use a decay rate on the parameters controlling the greediness to make the algorithm more greedy as the environment is further explored. We have implemented these policies in support of the algorithms. Given this information, the TD update is given as follows:
+\begin{equation}
+Q(S, A) = Q(S, A) + \alpha [R' + \gamma Q(S', A') - Q(S, A)].
+\end{equation}
+$q$-learning is very similar to Sarsa with the exception that it is an off-policy method, meaning that the policy being followed is different from the policy being learned, that learns the optimal state-action value function. Specifically $q$-learning follows the $\epsilon$-greedy policy or the Boltzmann policy but learns the greedy policy. The TD update is given as follows:
+\begin{equation}
+Q(S', A') = Q(S, A) + \alpha [R' + \gamma \max_a Q(S', a) - Q(S, A)].
+\end{equation}
+Finally, we note that to guarantee convergence of the algorithm the Robbins and Monro conditions \cite{robbins1951stochastic} on the learning rate must hold:
+\begin{equation}
+\sum_{t=0}^\infty \alpha_t(s, a) = \infty \hspace{5mm} \text{and} \hspace{5mm} \sum_{t=0}^\infty \alpha_t^2(s, a) < \infty, \ \forall \ s, a.
+\end{equation}
+% One of the most popular reinforcement learning algorithms to do this is called Q-learning \cite{sutton1998reinforcement}. The Q-learning algorithm iteratively updates the Q-function, a mapping from state-action pairs to value estimates, by taking steps in the direction of an error-like term called the temporal difference.
+ 
 
 
-
-\section{Risk-Sensitive Reinforcement Learning}\label{sec:risk}
-The novel contribution of \cite{DBLP:journals/corr/ShenTSO13} was to extend this method by applying a transformation to the temporal difference term with a value function obeying certain properties and coming from the class of functions that have been developed to model human behavior, while maintaining convergence guarantees. Through applying the value function to the temporal difference term, a nonlinear transformation is applied not only to the rewards, but also to the transition probabilities. This is significant given that this is precisely what humans have been observed to do when making decisions.
-
-
-\subsection{Algorithm}
-The complete procedure for risk-sensitive Q-learning with a finite horizon and a single episode is in Algorithm \ref{risk}. For a more detailed description see Section \ref{alg_desc}.
-\begin{algorithm}
-\caption{Risk-Sensitive Q-Learning}\label{risk}
-\begin{algorithmic}[1]
-\Procedure{RiskSensitiveQLearning}{}
-\State $\textit{Initialize} \ Q(s, a) = 0 \ \textit{and} \ N(s, a) = 0 \ \forall s, a.$
-\For{$t = 1$ to $T$}
-    \State $a_t \sim \pi(a|s_t)$
-    \State $N(s_t, a_t) = N(s_t, a_t) + 1$
-    \State $\alpha_t(s_t, a_t) = 1/N(s_t, a_t)$
-    \State $Q_{t+1}(s_t, a_t) = Q_t(s_t, a_t) + \alpha_t(s_t, a_t)\left[u(r_t + \gamma \max_a Q_t(s_{t+1}, a_t) - Q_t(s_t, a_t))\right]$
-    \EndFor
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
-\vspace{-4mm}
-\subsection{Simulations}
-In order to test the implementation of the risk-sensitive Q-learning algorithm we created a synthetic environment called Grid-World. In this environment each state is given by a tile in the grid and the possible actions are the the compass directions (N, E, S, W). The terminal states were set to be the upper left and lower right corners of the grid. Fig.~\ref{fig:sim} provides an example of the results. We designed the environment, which can be thought of as the underlying MDP, very simply to verify the algorithm was learning correctly. Thus transitions were deterministic, i.e. when an action is chosen the agent goes to the expected next state, and each action incurred reward of $-1$ except in the terminal states the reward was $0$. We then used the prospect value function with all risk-parameters set to $1$ which reduces the problem to standard q-learning. Thus the solution that should be learned is to take the Manhattan path to the nearest terminal state, and we indeed see this is the case. More interesting examples can be designed to show how risk-preferences will change the policy that is learned, but we have verified the algorithm is implemented correctly. Detailed results are provided in Section~\ref{sim}
-\begin{figure}[t]
-    \centering
-    \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_neutral}\label{fig:sim1}}\hfill
-    \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_low}\label{fig:sim2}}\hfill
-    \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_mid}\label{fig:sim1}}\hfill
-    \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_high}\label{fig:sim2}}
-    \caption{Prospect Value Function.}
-    \label{fig:sim}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_neutral}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_low}\label{fig:sim2}}\vfill
-    \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_mid}\label{fig:sim1}}\hfill
-    \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_high}\label{fig:sim2}}
-    \caption{Risk Sensitive Q-learning results.}
-    \label{fig:sim}
-\end{figure}
+% \section{Risk-Sensitive Reinforcement Learning}\label{sec:risk}
+% The novel contribution of \cite{DBLP:journals/corr/ShenTSO13} was to extend this method by applying a transformation to the temporal difference term with a value function obeying certain properties and coming from the class of functions that have been developed to model human behavior, while maintaining convergence guarantees. Through applying the value function to the temporal difference term, a nonlinear transformation is applied not only to the rewards, but also to the transition probabilities. This is significant given that this is precisely what humans have been observed to do when making decisions.
 
 
-\section{New York Taxi Dataset}\label{sec:taxi}
-\subsection{Data Description}
-The New York Taxi Dataset covers taxi operations from $2010$--$2013$, in total there are nearly $700$ million recorded trips. The data is stored in separate CSV files for each month. We will analyze a subset of the drivers and over only a few months. Each row in a file contains the information for a trip record. The key information that is contained is the hack license (driver ID), pickup date-time, dropoff date-time, trip time in seconds, trip distance in miles, GPS coordinates at the starting location, GPS coordinates at the ending location, total fare including tip, and the total cost of tolls.
-\subsection{MDP Formulation for Taxi Drivers}
-We model a taxi driver as acting according to a finite MDP where an episode corresponds to a single days work. The complete formulation is given in Section \ref{mdp}. They salient features of the formulation are:
-\begin{itemize}
-\item Each state is a tuple containing the node the driver is in--we discretized location into a grid using district boundaries for New York City--an indicator of whether the taxi currently is full (just picked up passengers) or empty (just dropped off passengers), and the cumulative reward interval the driver is in--we discretized the reward intervals assuming that how a driver behaves may be a function of the earnings at a point in the workday.
-\item Actions are moving between nodes in the location grid we created.
-\item The reward functions use values derived from the data, such as earning rate, the expected time searching for a passenger, and the fare between grid nodes. The transition probabilities use empirical transition probabilities as well as expected earning rates. 
-\end{itemize}
-\subsection{Data Preprocessing}
-The data required a significant amount of preprocessing to clean the data and obtain the needed quantities for the MDP formulation. This dataset has been used a fair amount for research and there are some well documented errors. In fact, it was estimated by the folks who obtained the data that nearly $10\%$ of trips contained erroneous information. Below are some of the things we did to clean the data:
-\begin{itemize}
-\item The trip time reported is often inaccurate. To compensate for this we calculate the trip time using the difference between the reported pickup and dropoff time.
-\item We drop the following trip instances: trips that occur in which the GPS coordinates are not in New York, trip times that are extremely short to the point of being infeasible, and trips with extremely low (less than \$.30 a minute) or extremely high (greater than \$20 an hour) earning rates.
-\end{itemize}
-These are only a subset of the issues with the data that we cleaned but these are the most significant and well documented from previous work with the data. 
+% \subsection{Algorithm}
+% The complete procedure for risk-sensitive Q-learning with a finite horizon and a single episode is in Algorithm \ref{risk}. For a more detailed description see Section \ref{alg_desc}.
+% \begin{algorithm}
+% \caption{Risk-Sensitive Q-Learning}\label{risk}
+% \begin{algorithmic}[1]
+% \Procedure{RiskSensitiveQLearning}{}
+% \State $\textit{Initialize} \ Q(s, a) = 0 \ \textit{and} \ N(s, a) = 0 \ \forall s, a.$
+% \For{$t = 1$ to $T$}
+%     \State $a_t \sim \pi(a|s_t)$
+%     \State $N(s_t, a_t) = N(s_t, a_t) + 1$
+%     \State $\alpha_t(s_t, a_t) = 1/N(s_t, a_t)$
+%     \State $Q_{t+1}(s_t, a_t) = Q_t(s_t, a_t) + \alpha_t(s_t, a_t)\left[u(r_t + \gamma \max_a Q_t(s_{t+1}, a_t) - Q_t(s_t, a_t))\right]$
+%     \EndFor
+% \EndProcedure
+% \end{algorithmic}
+% \end{algorithm}
+% \vspace{-4mm}
+% \subsection{Simulations}
+% In order to test the implementation of the risk-sensitive Q-learning algorithm we created a synthetic environment called Grid-World. In this environment each state is given by a tile in the grid and the possible actions are the the compass directions (N, E, S, W). The terminal states were set to be the upper left and lower right corners of the grid. Fig.~\ref{fig:sim} provides an example of the results. We designed the environment, which can be thought of as the underlying MDP, very simply to verify the algorithm was learning correctly. Thus transitions were deterministic, i.e. when an action is chosen the agent goes to the expected next state, and each action incurred reward of $-1$ except in the terminal states the reward was $0$. We then used the prospect value function with all risk-parameters set to $1$ which reduces the problem to standard q-learning. Thus the solution that should be learned is to take the Manhattan path to the nearest terminal state, and we indeed see this is the case. More interesting examples can be designed to show how risk-preferences will change the policy that is learned, but we have verified the algorithm is implemented correctly. Detailed results are provided in Section~\ref{sim}
 
-There are also a couple of important things we do to create the MDP which we make note of. Drivers work abnormal hours, i.e. the typical driver begins work in the evening and works until the early morning hours. In light of this we shift all transaction times back by 12 hours so that we can observe the full workday within a single date. We estimate the time spent searching for a new trip as the time from dropoff to pickup, but if this time exceeds 20 we assume the driver was taking a break.
 
-\subsection{Taxi MDP Model Description}\label{mdp}
-\subsubsection{State Space}
-The state space is
-\[\mc{X}=\{\mc{N}\cup\{x_f\}\times\mc{S}\times \mc{R}\}\backslash \mc{X}_{na}\]
-where
-\begin{itemize}
-\item $x_f$ is the terminal state representing the taxi being done for the period,
+% \begin{figure}[t]
+%     \centering
+%     \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_neutral}\label{fig:sim1}}\hfill
+%     \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_low}\label{fig:sim2}}\hfill
+%     \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_mid}\label{fig:sim1}}\hfill
+%     \subfloat[][]{\includegraphics[width=.25\linewidth]{../paper_figs/prospect_high}\label{fig:sim2}}
+%     \caption{Prospect Value Function.}
+%     \label{fig:sim}
+% \end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_neutral}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_low}\label{fig:sim2}}\vfill
+%     \subfloat[][Q-value function results.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_mid}\label{fig:sim1}}\hfill
+%     \subfloat[][Value function results and policy.]{\includegraphics[width=.5\linewidth]{../paper_figs/policy_high}\label{fig:sim2}}
+%     \caption{Risk Sensitive Q-learning results.}
+%     \label{fig:sim}
+% \end{figure}
 
-\item $\mc{N}$ be the index set for the zones or nodes in the city with $N$ nodes,
 
-\item $\mc{S}=\{${\e, \f}$\}$ is an indicator of if the taxi is \e=empty or \f=full, and
+% \section{New York Taxi Dataset}\label{sec:taxi}
+% \subsection{Data Description}
+% The New York Taxi Dataset covers taxi operations from $2010$--$2013$, in total there are nearly $700$ million recorded trips. The data is stored in separate CSV files for each month. We will analyze a subset of the drivers and over only a few months. Each row in a file contains the information for a trip record. The key information that is contained is the hack license (driver ID), pickup date-time, dropoff date-time, trip time in seconds, trip distance in miles, GPS coordinates at the starting location, GPS coordinates at the ending location, total fare including tip, and the total cost of tolls.
+% \subsection{MDP Formulation for Taxi Drivers}
+% We model a taxi driver as acting according to a finite MDP where an episode corresponds to a single days work. The complete formulation is given in Section \ref{mdp}. They salient features of the formulation are:
+% \begin{itemize}
+% \item Each state is a tuple containing the node the driver is in--we discretized location into a grid using district boundaries for New York City--an indicator of whether the taxi currently is full (just picked up passengers) or empty (just dropped off passengers), and the cumulative reward interval the driver is in--we discretized the reward intervals assuming that how a driver behaves may be a function of the earnings at a point in the workday.
+% \item Actions are moving between nodes in the location grid we created.
+% \item The reward functions use values derived from the data, such as earning rate, the expected time searching for a passenger, and the fare between grid nodes. The transition probabilities use empirical transition probabilities as well as expected earning rates. 
+% \end{itemize}
+% \subsection{Data Preprocessing}
+% The data required a significant amount of preprocessing to clean the data and obtain the needed quantities for the MDP formulation. This dataset has been used a fair amount for research and there are some well documented errors. In fact, it was estimated by the folks who obtained the data that nearly $10\%$ of trips contained erroneous information. Below are some of the things we did to clean the data:
+% \begin{itemize}
+% \item The trip time reported is often inaccurate. To compensate for this we calculate the trip time using the difference between the reported pickup and dropoff time.
+% \item We drop the following trip instances: trips that occur in which the GPS coordinates are not in New York, trip times that are extremely short to the point of being infeasible, and trips with extremely low (less than \$.30 a minute) or extremely high (greater than \$20 an hour) earning rates.
+% \end{itemize}
+% These are only a subset of the issues with the data that we cleaned but these are the most significant and well documented from previous work with the data. 
 
-\item $\mc{R}$ is the discretized cumulative fare value space which has the
-structure \[\mc{R}=\{\mc{R}_1\}\cup\cdots\cup\{\mc{R}_m\}\cup\{\mc{R}_f\}\]
-where $\mc{R}_i=[a_i,b_i]$ with $a_1< b_1\leq a_2<b_2 \cdots \leq a_m<
-b_m=\bar{r}$ and $\mc{R}_f=[\bar{r}, \infty)$ where $\bar{r}$ is some reference point for period earnings (e.g., if the period of investigation is a day, then this is the daily earnings reference point).
+% There are also a couple of important things we do to create the MDP which we make note of. Drivers work abnormal hours, i.e. the typical driver begins work in the evening and works until the early morning hours. In light of this we shift all transaction times back by 12 hours so that we can observe the full workday within a single date. We estimate the time spent searching for a new trip as the time from dropoff to pickup, but if this time exceeds 20 we assume the driver was taking a break.
 
-\item $\mc{X}_{na}$ are the states not allowed and is defined by
-\[\mc{X}_{na}=\{(x_f,\f,r), r\in \mc{R}\}\cup\{(x_f,\e,r), r\notin\mc{R}_f\}\]
-\end{itemize}
+% \subsection{Taxi MDP Model Description}\label{mdp}
+% \subsubsection{State Space}
+% The state space is
+% \[\mc{X}=\{\mc{N}\cup\{x_f\}\times\mc{S}\times \mc{R}\}\backslash \mc{X}_{na}\]
+% where
+% \begin{itemize}
+% \item $x_f$ is the terminal state representing the taxi being done for the period,
+
+% \item $\mc{N}$ be the index set for the zones or nodes in the city with $N$ nodes,
+
+% \item $\mc{S}=\{${\e, \f}$\}$ is an indicator of if the taxi is \e=empty or \f=full, and
+
+% \item $\mc{R}$ is the discretized cumulative fare value space which has the
+% structure \[\mc{R}=\{\mc{R}_1\}\cup\cdots\cup\{\mc{R}_m\}\cup\{\mc{R}_f\}\]
+% where $\mc{R}_i=[a_i,b_i]$ with $a_1< b_1\leq a_2<b_2 \cdots \leq a_m<
+% b_m=\bar{r}$ and $\mc{R}_f=[\bar{r}, \infty)$ where $\bar{r}$ is some reference point for period earnings (e.g., if the period of investigation is a day, then this is the daily earnings reference point).
+
+% \item $\mc{X}_{na}$ are the states not allowed and is defined by
+% \[\mc{X}_{na}=\{(x_f,\f,r), r\in \mc{R}\}\cup\{(x_f,\e,r), r\notin\mc{R}_f\}\]
+% \end{itemize}
    
-A state $(i,s,r)\in \mc{N}\times\mc{S}\times \mc{R}$ indicates the taxi
-is in node $i$ (or terminal state $x_f$ if $i=x_f$), has a empty/full state of $s$ and has current cumulative
-fare value $r$. The terminal state is reached when the fare value portion of the
-state is greater than or equal to $\bar{r}$. 
+% A state $(i,s,r)\in \mc{N}\times\mc{S}\times \mc{R}$ indicates the taxi
+% is in node $i$ (or terminal state $x_f$ if $i=x_f$), has a empty/full state of $s$ and has current cumulative
+% fare value $r$. The terminal state is reached when the fare value portion of the
+% state is greater than or equal to $\bar{r}$. 
 
-The dimension of the state space is thus, 
-\[(\dim(\mc{N})+\dim(\{x_f\}))\times\dim(\mc{S})\times\dim(\mc{R})-|\mc{X}_{na}|.\]
-
-
-\subsubsection{Action Space}
-Let $\mc{U}=\mc{U}_a\cup\{\emptyset\}$ where
-$\mc{U}_a=\{u_{i\mapsto j}, (i,j)\in \mc{N}\times \mc{N}\}$ be the action space where $u_{i\mapsto j}$ indicates the choice of going from node $i$ to node $j$ and where $\emptyset$ is the null action. The admissible actions are state dependent. In particular, if the state is $x=(i,\e,r)$ for any $i\in
-\mc{N}$ and any cumulative fare value $r\in\mc{R}$, then $\mc{U}(i,\e,r)=\{u_{i\mapsto j}, (i,j)\in \mc{N}\times \mc{N}\}$ and, on the other hand, if $x=(i,\f,r)$ for any $i\in \mc{N}$ and any cumulative fare value $r\in\mc{R}$, then
-$\mc{U}(i,\f,r)=\{\emptyset\}$ indicating that the taxi is currently full and is taking a ride from node $i$ to node $k$ with probability $\Pdest(i,k)$ (i.e.~the probability that a fare picked up in node $i$ will want to go to node $k$).
-
-\subsubsection{Transition Kernel}
-Let $\mc{P}: \mc{X}\times \mc{U}\times\mc{X}\rar [0,1]$ be the transition kernel such that $\mc{P}(x_{t},u_t, x_{t+1})$ is the probability that state $x_t$ will transition to state $x_{t+1}$ given action $u_t$. Let's consider the different cases. 
-\begin{itemize}
-\item First let's look at the $\e$ to $\e$ transitions for all other state action pairs:
-\[\mc{P}( (i,\e,r),u,(j,\e,r'))=\left\{\begin{array}{ll} 1, & \ \text{if}\ r,r'\in \mc{R}_f\ \text{\&}\ \{i\in \mc{N},j=x_f\}\vee\{i=x_f,j=x_f\}\\
-0, & \ \text{otherwise}\end{array}\right.\]
-
-\item Now let's look at the $\f$ to $\f$ transitions for all other state action pairs:
-
-\[\mc{P}( (i,\f,r),u,(j,\f,r'))=0\]
-\item Next we will look at the $\f$ to $\e$ transitions for all other state action pairs:
-\[\mc{P}((i,\f,r),u,(j,\e,r'))=\left\{\begin{array}{ll}
-\Pdest(i,j)P(E[F(i,j)]+r\geq a_l)\ & \ \text{if}\ r'\in \mc{R}_l, r'\geq r\ \text{\&}\ i,j\in \mc{N}\\ 0, & \ \text{otherwise} \end{array}\right.\]
-where $a_l$ is the lower bound on the interval
-$\mc{R}_l=[a_l,b_l)$
-\item Finally we look at the $\e$ to $\f$ transitions (these are all ones where the choices of action dictates the transition probability)
-
-\[\mc{P}( (i,\e,r),u,(j,\f,r'))=\left\{\begin{array}{ll} 1, & \ \text{if}\ u=u_{i\mapsto j}\ \text{\&}\ r=r', r\notin \mc{R}_f\\
-0, & \ \text{otherwise}\end{array}\right.\]
-\end{itemize}
-
-\subsubsection{Reward Function}
-The reward function is a map $R:\mc{X}\times \mc{U}\times \mc{X}\times \rar \mb{R}$ with $R(x_{t},u_t,x_{t+1})$ a random variable such that
-\begin{itemize}
-\item The reward for $\f$ to $\e$ is 
-
-\[R( (i,\f,r), u, (j,\e,r'))=\left\{\begin{array}{ll}F(i,j), & \ \text{if}\ i,j\in \mc{N}, u=\emptyset, r'\geq r\\ 0, & \ \text{otherwise}\end{array}\right.\]
-where $F(i,j)$ is a random variable representing the fare from $i$ to $j$. 
+% The dimension of the state space is thus, 
+% \[(\dim(\mc{N})+\dim(\{x_f\}))\times\dim(\mc{S})\times\dim(\mc{R})-|\mc{X}_{na}|.\]
 
 
-\item The reward for $\e$ to $\f$ is 
-\[R((i,\f,r), u, (j,\e,r'))=\left\{\begin{array}{ll}-t_{\text{\sn{seek}}}(i,j)/E(i,j)^{-1}, & \ \text{if}\ i,j\in \mc{N}, u=u_{i\mapsto j}, r=r'\notin \mc{R}_f\\
-0, & \ \text{otherwise}\end{array}\right.\]
+% \subsubsection{Action Space}
+% Let $\mc{U}=\mc{U}_a\cup\{\emptyset\}$ where
+% $\mc{U}_a=\{u_{i\mapsto j}, (i,j)\in \mc{N}\times \mc{N}\}$ be the action space where $u_{i\mapsto j}$ indicates the choice of going from node $i$ to node $j$ and where $\emptyset$ is the null action. The admissible actions are state dependent. In particular, if the state is $x=(i,\e,r)$ for any $i\in
+% \mc{N}$ and any cumulative fare value $r\in\mc{R}$, then $\mc{U}(i,\e,r)=\{u_{i\mapsto j}, (i,j)\in \mc{N}\times \mc{N}\}$ and, on the other hand, if $x=(i,\f,r)$ for any $i\in \mc{N}$ and any cumulative fare value $r\in\mc{R}$, then
+% $\mc{U}(i,\f,r)=\{\emptyset\}$ indicating that the taxi is currently full and is taking a ride from node $i$ to node $k$ with probability $\Pdest(i,k)$ (i.e.~the probability that a fare picked up in node $i$ will want to go to node $k$).
 
-where $t_{\text{\sn{seek}}}(i,j)$ is a random variable for the time to travel and find a fare when you go from node $i$ to $j$ under the control action $u_{i\mapsto j}$ and where $E(i,j)$ is a random variable for the earning rate for trips from $i$ to $j$. In practice, we infer the mean values of these quantities from the data.
-\end{itemize}
+% \subsubsection{Transition Kernel}
+% Let $\mc{P}: \mc{X}\times \mc{U}\times\mc{X}\rar [0,1]$ be the transition kernel such that $\mc{P}(x_{t},u_t, x_{t+1})$ is the probability that state $x_t$ will transition to state $x_{t+1}$ given action $u_t$. Let's consider the different cases. 
+% \begin{itemize}
+% \item First let's look at the $\e$ to $\e$ transitions for all other state action pairs:
+% \[\mc{P}( (i,\e,r),u,(j,\e,r'))=\left\{\begin{array}{ll} 1, & \ \text{if}\ r,r'\in \mc{R}_f\ \text{\&}\ \{i\in \mc{N},j=x_f\}\vee\{i=x_f,j=x_f\}\\
+% 0, & \ \text{otherwise}\end{array}\right.\]
 
-\subsubsection{Initial State}
-The intial state for the taxi will be $x_0=(i,\e,r_0)$ where $i$ is the node or
-zone which the taxi most frequently starts in and $r_0\in \mc{R}_0=[0,b_0)$. It always starts in the empty state.
-\section{Future Work}
-As the final deadline approaches we will work on towards the following experiments and goals. First and foremost, utilizing the underlying MDP framework that we have designed for taxi drivers we will investigate the divergence between the empirical policy of drivers found in the data and the optimal policy found with a standard q-learning formulation. This will be allow us to determine whether drivers have learned to maximize their expected earnings. We will then explore the risk-sensitive q-learning formulation, and with the value functions we examine, attempt to find parameters which produce a policy that gives low KL divergence with the empirical policy. If we can do this successfully, it will allow us to characterize how drivers weigh decisions and their risk preferences. Time permitting, we will then explore the risk-sensitive inverse reinforcement learning problem in Grid-World and then in the taxi dataset. 
+% \item Now let's look at the $\f$ to $\f$ transitions for all other state action pairs:
+
+% \[\mc{P}( (i,\f,r),u,(j,\f,r'))=0\]
+% \item Next we will look at the $\f$ to $\e$ transitions for all other state action pairs:
+% \[\mc{P}((i,\f,r),u,(j,\e,r'))=\left\{\begin{array}{ll}
+% \Pdest(i,j)P(E[F(i,j)]+r\geq a_l)\ & \ \text{if}\ r'\in \mc{R}_l, r'\geq r\ \text{\&}\ i,j\in \mc{N}\\ 0, & \ \text{otherwise} \end{array}\right.\]
+% where $a_l$ is the lower bound on the interval
+% $\mc{R}_l=[a_l,b_l)$
+% \item Finally we look at the $\e$ to $\f$ transitions (these are all ones where the choices of action dictates the transition probability)
+
+% \[\mc{P}( (i,\e,r),u,(j,\f,r'))=\left\{\begin{array}{ll} 1, & \ \text{if}\ u=u_{i\mapsto j}\ \text{\&}\ r=r', r\notin \mc{R}_f\\
+% 0, & \ \text{otherwise}\end{array}\right.\]
+% \end{itemize}
+
+% \subsubsection{Reward Function}
+% The reward function is a map $R:\mc{X}\times \mc{U}\times \mc{X}\times \rar \mb{R}$ with $R(x_{t},u_t,x_{t+1})$ a random variable such that
+% \begin{itemize}
+% \item The reward for $\f$ to $\e$ is 
+
+% \[R( (i,\f,r), u, (j,\e,r'))=\left\{\begin{array}{ll}F(i,j), & \ \text{if}\ i,j\in \mc{N}, u=\emptyset, r'\geq r\\ 0, & \ \text{otherwise}\end{array}\right.\]
+% where $F(i,j)$ is a random variable representing the fare from $i$ to $j$. 
+
+
+% \item The reward for $\e$ to $\f$ is 
+% \[R((i,\f,r), u, (j,\e,r'))=\left\{\begin{array}{ll}-t_{\text{\sn{seek}}}(i,j)/E(i,j)^{-1}, & \ \text{if}\ i,j\in \mc{N}, u=u_{i\mapsto j}, r=r'\notin \mc{R}_f\\
+% 0, & \ \text{otherwise}\end{array}\right.\]
+
+% where $t_{\text{\sn{seek}}}(i,j)$ is a random variable for the time to travel and find a fare when you go from node $i$ to $j$ under the control action $u_{i\mapsto j}$ and where $E(i,j)$ is a random variable for the earning rate for trips from $i$ to $j$. In practice, we infer the mean values of these quantities from the data.
+% \end{itemize}
+
+% \subsubsection{Initial State}
+% The intial state for the taxi will be $x_0=(i,\e,r_0)$ where $i$ is the node or
+% zone which the taxi most frequently starts in and $r_0\in \mc{R}_0=[0,b_0)$. It always starts in the empty state.
+% \section{Future Work}
+% As the final deadline approaches we will work on towards the following experiments and goals. First and foremost, utilizing the underlying MDP framework that we have designed for taxi drivers we will investigate the divergence between the empirical policy of drivers found in the data and the optimal policy found with a standard q-learning formulation. This will be allow us to determine whether drivers have learned to maximize their expected earnings. We will then explore the risk-sensitive q-learning formulation, and with the value functions we examine, attempt to find parameters which produce a policy that gives low KL divergence with the empirical policy. If we can do this successfully, it will allow us to characterize how drivers weigh decisions and their risk preferences. Time permitting, we will then explore the risk-sensitive inverse reinforcement learning problem in Grid-World and then in the taxi dataset. 
 
 \bibliographystyle{unsrtnat}
 \bibliography{bibtex}
@@ -354,6 +417,15 @@ q_*(s,a) &= \mathbb{E}[R_{t+1} + \gamma \underset{a'}{\text{max}} \ q_*(S_{t+1},
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+
+
+\section{Model Based RL Experiments}\label{sec:model_exp_appendix}
+
+\section{Model Free RL Algorithms}\label{sec:model_free_appendix}
+
+
+\section{Model Free RL Experiments}\label{sec:model_free_exp_appendix}
+
 
 \subsection{Risk-Sensitive Q-Learning Description}\label{alg_desc}
 Q-learning is an off-policy method, meaning the policy being learned is not the policy that is being sampled from when choosing actions to interact with the environment. The policy that is being followed must be proper, meaning that all states are visited infinitely often. Two such proper policies are the $\epsilon$-greedy policy and the Boltzmann policy. Each of these methods trades off exploration and exploitation. Given the greedy action $a^* = \arg \max_a Q(s, a)$ the $\epsilon$-greedy policy is given by

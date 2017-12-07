@@ -1668,7 +1668,7 @@ class GridWorldBase(object):
                         self.P[state, action, state] += noise
         
     
-    def create_rewards(self, living_rewards, terminal_rewards):
+    def create_rewards(self, living_rewards, terminal_rewards, reward_into):
         """Creating the reward structure for the MDP or environment.
 
         The default reward structure. Living rewards for all actions, except 
@@ -1676,6 +1676,8 @@ class GridWorldBase(object):
 
         :param living_rewards: Float as basic reward given for living.
         :param terminal_rewards: Dict from terminal state index to reward.
+        :param reward_into: Bool indicating whether to give terminal reward for transition
+        into terminal state in addition to when in the state.
         """
         
         self.R = living_rewards*np.ones((self.n, self.m, self.n))
@@ -1686,7 +1688,8 @@ class GridWorldBase(object):
                     if s in self.terminal_states:
                         self.R[s, a, s_new] = terminal_rewards[s]
                     elif s_new in self.terminal_states:
-                        self.R[s, a, s_new] = terminal_rewards[s_new]
+                        if reward_into:
+                            self.R[s, a, s_new] = terminal_rewards[s_new]
                     else:
                         pass       
     
@@ -1734,7 +1737,7 @@ class GridWorldBase(object):
 class GridWorldMDP(GridWorldBase):
     def __init__(self, grid_rows=4, grid_cols=4, num_actions=4, terminal_states=[0,15], 
                  terminal_rewards={0:1, 15:1}, prob_noise=0.0, living_rewards=0.1,
-                 probs=None, rewards=None):
+                 reward_into=True, probs=None, rewards=None):
         """Creating the grid world MDP. Note that everything is indexed by 
         row, column, not x, y coordinates.
 
@@ -1745,6 +1748,8 @@ class GridWorldMDP(GridWorldBase):
         :param terminal_rewards: Dict from terminal state index to reward.
         :param prob_noise: Float in [0,1] to use as noise in the transition function.
         :param living_rewards: Float as basic reward given for living.
+        :param reward_into: Bool indicating whether to give terminal reward for transition
+        into terminal state in addition to when in the state.
         :param probs: None indicates to create the default probability distribution, 
         otherwise this should be a numpy array of the probability distribution from
         state, action, state.
@@ -1765,7 +1770,8 @@ class GridWorldMDP(GridWorldBase):
         
         self.terminal_rewards = terminal_rewards
         if rewards is None:
-            self.create_rewards(living_rewards=living_rewards, terminal_rewards=terminal_rewards)
+            self.create_rewards(living_rewards=living_rewards, terminal_rewards=terminal_rewards, 
+                                reward_into=reward_into)
         else:
             self.R = rewards
         
@@ -1773,8 +1779,8 @@ class GridWorldMDP(GridWorldBase):
 class GridWorldEnv(GridWorldBase):
     def __init__(self, grid_rows, grid_cols, num_actions=4, terminal_states=[0,15], 
                  terminal_rewards={0:1, 15:1}, prob_noise=0.0, living_rewards=0.1, 
-                 sample_mu=0, sample_std=0, probs=None, rewards=None, initial_state=None, 
-                 episodic=False):
+                 reward_into=True, sample_mu=0, sample_std=0, probs=None, rewards=None, 
+                 initial_state=None, episodic=False):
         """Creating the grid world environment. Note that everything is indexed by 
         row, column, not x, y coordinates.
 
@@ -1785,6 +1791,8 @@ class GridWorldEnv(GridWorldBase):
         :param terminal_rewards: Dict from terminal state index to reward.
         :param prob_noise: Float in [0,1] to use as noise in the transition function.
         :param living_rewards: Float as basic reward given for living.
+        :param reward_into: Bool indicating whether to give terminal reward for transition
+        into terminal state in addition to when in the state.
         :param sample_mu: Float Gaussian mean noise parameter for rewards.
         :param sample_std: Float Gaussian std noise parameter for rewards.
         :param probs: None indicates to create the default probability distribution, 
@@ -1815,14 +1823,15 @@ class GridWorldEnv(GridWorldBase):
 
         self.terminal_rewards = terminal_rewards
         if rewards is None:
-            self.create_rewards(living_rewards=living_rewards, terminal_rewards=terminal_rewards)
+            self.create_rewards(living_rewards=living_rewards, terminal_rewards=terminal_rewards, 
+                                reward_into=reward_into)
         else:
             self.R = rewards
 
         if initial_state is not None:
             self.initial_state = initial_state
 
-        self.episodic = True
+        self.episodic = episodic
 
 
     def reset(self):
