@@ -1247,81 +1247,6 @@ class ProspectAgent(RiskAgent):
         return u
 
 
-    def dudc(self, x):
-        """Compute the derivative of the prospect value function with respect to c.""" 
-
-        if isinstance(x, float) or isinstance(x, int):
-            if x > self.ref:
-                du_dc = (x - self.ref)**self.rho_plus
-            elif x <= self.ref:
-                du_dc = -1.*(self.ref - x)**self.rho_minus
-        
-        elif isinstance(x, np.ndarray) or isinstance(x, list):
-            
-            du_dc[i] = np.zeros(len(x))
-
-            for i in xrange(len(x)):
-                if x[i] > self.ref:
-                    du_dc[i] = (x[i] - self.ref)**self.rho_plus
-                elif x <= self.ref:
-                    du_dc[i] = -1.*(self.ref - x[i])**self.rho_minus
-        else:
-            print('Bad data type input to prospect value function')
-            u = x
-
-        return du_dc
-
-
-    def dudrho(self, x):
-        """Compute the derivative of the prospect value function with respect to rho."""
-
-        if isinstance(x, float) or isinstance(x, int):
-            if x > self.ref:
-                du_drho = self.c_plus * np.log(x - self.ref) * (x - self.ref)**self.rho_plus
-            elif x <= self.ref:
-                du_drho = -self.c_minus * np.log(self.ref - x) * (self.ref - x)**self.rho_minus
-
-        elif isinstance(x, np.ndarray) or isinstance(x, list):
-            
-            du_drho = np.zeros(len(x))
-
-            for i in xrange(len(x)):
-                if x[i] > self.ref:
-                    du_drho[i] = self.c_plus * np.log(x[i] - self.ref) * (x[i] - self.ref)**self.rho_plus
-                elif x[i] <= self.ref:
-                    du_drho[i] = -self.c_minus * np.log(self.ref - x[i]) * (self.ref - x[i])**self.rho_minus
-        else:
-            print('Bad data type input to prospect value function')
-            u = x
-
-        return du_drho
-
-
-    def dudx(self, x):
-        """Compute the derivative of the prospect value function with respect to x."""
-
-        if isinstance(x, float) or isinstance(x, int):
-            if x > self.ref:
-                du_dx = self.c_plus * self.rho_plus * (x - self.ref)**(self.rho_plus - 1.)
-            elif x <= self.ref:
-                du_dx = -self.c_minus * self.rho_minus * (self.ref - x)**(self.rho_minus - 1.)
-
-        elif isinstance(x, np.ndarray) or isinstance(x, list):
-            
-            du_dx = np.zeros(len(x))
-
-            for i in xrange(len(x)):
-                if x[i] > self.ref:
-                    du_dx[i] = self.c_plus * self.rho_plus * (x[i] - self.ref)**(self.rho_plus - 1.)
-                elif x[i] <= self.ref:
-                    du_dx[i] = -self.c_minus * self.rho_minus * (self.ref - x[i])**(self.rho_minus - 1.)
-        else:
-            print('Bad data type input to prospect value function')
-            u = x
-
-        return du_dx
-
-
 class EntropicAgent(RiskAgent):
     def __init__(self, ref=0, lamb=0):
 
@@ -1333,22 +1258,6 @@ class EntropicAgent(RiskAgent):
 
         u = (np.exp(self.lamb*x) - 1)/self.lamb 
         return u
-
-
-    def dudc(self, x):
-        """Computing the derivative of the entropic value function with respect to lambda."""
-
-        de_dl = (-1./self.lamb**2) * (np.exp(self.lamb*x) - 1) + (x * np.exp(self.lamb*x))/(self.lamb)
-
-        return de_dl
-
-
-    def dudx(self, x):
-        """Computing the derivative of the entropic value function with respect to x."""
-
-        de_dx = np.exp(self.lamb*x)
-
-        return de_dx
 
 
 class LogAgent(RiskAgent):
@@ -1380,81 +1289,6 @@ class LogAgent(RiskAgent):
             u = x
 
         return u
-
-
-    def dudc(self, x):
-        """Compute the derivative of the log value function with respect to c."""
-
-        if isinstance(x, float) or isinstance(x, int):
-            if x > self.ref:
-                dl_dc = np.log(1. + self.rho_plus*(x - self.ref))
-            elif x <= self.ref:
-                dl_dc = -1.*np.log(1. + self.rho_minus*(self.ref - x))
-        
-        elif isinstance(x, np.ndarray) or isinstance(x, list):
-            
-            dl_dc = np.zeros(len(x))
-
-            for i in xrange(len(x)):
-                if x[i] > self.ref:
-                    dl_dc[i] = np.log(1. + self.rho_plus*(x[i] - self.ref))
-                elif x[i] <= self.ref:
-                    dl_dc[i] = -1.*np.log(1. + self.rho_minus*(self.ref - x[i]))
-        else:
-            print('Bad data type input to log value function')
-            u = x
-
-        return dl_dc
-
-
-    def dudrho(self, x):
-        """Compute the derivative of the log value function with respect to rho."""
-
-        if isinstance(x, float) or isinstance(x, int):
-            if x > self.ref:
-                dl_drho = ((self.c_plus * (x - self.ref))/(1. + self.rho_plus*(x - self.ref))) 
-            elif x <= self.ref:
-                dl_drho = ((-self.c_minus * (self.ref - x))/(1. + self.rho_minus*(self.ref - x))) 
-
-        elif isinstance(x, np.ndarray) or isinstance(x, list):
-            
-            dl_drho = np.zeros(len(x))
-
-            for i in xrange(len(x)):
-                if x[i] > self.ref:
-                    dl_drho[i] = ((self.c_plus * (x[i] - self.ref))/(1. + self.rho_plus*(x[i] - self.ref))) 
-                elif x[i] <= self.ref:
-                    dl_drho[i] = ((-self.c_minus * (self.ref - x[i]))/(1. + self.rho_minus*(self.ref - x[i]))) 
-        else:
-            print('Bad data type input to log value function')
-            u = x
-
-        return dl_drho
-
-
-    def dudx(self, x):
-        """Compute the derivative of the log value function with respect to x."""
-
-        if isinstance(x, float) or isinstance(x, int):
-            if x > self.ref:
-                dl_dx = ((self.c_plus * self.rho_plus)/(1. + self.rho_plus*(x - self.ref))) 
-            elif x <= self.ref:
-                dl_dx = ((self.c_minus * self.rho_minus)/(1. + self.rho_minus*(self.ref - x))) 
-
-        elif isinstance(x, np.ndarray) or isinstance(x, list):
-            
-            dl_dx = np.zeros(len(x))
-
-            for i in xrange(len(x)):
-                if x[i] > self.ref:
-                    dl_dx[i] = ((self.c_plus * self.rho_plus)/(1. + self.rho_plus*(x[i] - self.ref))) 
-                elif x[i] <= self.ref:
-                    dl_dx[i] = ((self.c_minus * self.rho_minus)/(1. + self.rho_minus*(self.ref - x[i]))) 
-        else:
-            print('Bad data type input to log value function')
-            u = x
-
-        return dl_dx
 
 
 class SimulatedMDP(object):

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  7 DEC 2017 02:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  7 DEC 2017 22:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -636,6 +636,9 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@every@algorithm=\toks27
 \c@algorithm=\count120
 )
+(/usr/local/texlive/2016/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
 (/usr/local/texlive/2016/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
 Package: algpseudocode 
 
@@ -711,24 +714,60 @@ File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
 \Gin@req@height=\dimen146
 \Gin@req@width=\dimen147
 )
+(/usr/local/texlive/2016/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count137
+\lst@gtempboxa=\box30
+\lst@token=\toks28
+\lst@length=\count138
+\lst@currlwidth=\dimen148
+\lst@column=\count139
+\lst@pos=\count140
+\lst@lostspace=\dimen149
+\lst@width=\dimen150
+\lst@newlines=\count141
+\lst@lineno=\count142
+\lst@maxwidth=\dimen151
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
+\c@lstnumber=\count143
+\lst@skipnumbers=\count144
+\lst@framebox=\box31
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2015/06/04 1.6 listings configuration
+))
+Package: listings 2015/06/04 1.6 (Carsten Heinz)
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2016/05/09 v1.1c Standard LaTeX Color (DPC)
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 144.
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2015/06/04 1.6 listings language file
+)
 (./Tanner_Fiez_Project.aux)
 \openout1 = `Tanner_Fiez_Project.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 54.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 77.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/t1ptm.fd
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
@@ -799,25 +838,25 @@ File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\AtBeginShipoutBox=\box30
-Package hyperref Info: Link coloring OFF on input line 54.
+\AtBeginShipoutBox=\box32
+Package hyperref Info: Link coloring OFF on input line 77.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
 (/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count137
+\c@section@level=\count145
 )
-LaTeX Info: Redefining \ref on input line 54.
-LaTeX Info: Redefining \pageref on input line 54.
-LaTeX Info: Redefining \nameref on input line 54.
+LaTeX Info: Redefining \ref on input line 77.
+LaTeX Info: Redefining \pageref on input line 77.
+LaTeX Info: Redefining \nameref on input line 77.
 
 (./Tanner_Fiez_Project.out) (./Tanner_Fiez_Project.out)
 \@outlinefile=\write3
 \openout3 = `Tanner_Fiez_Project.out'.
 
-LaTeX Info: Redefining \microtypecontext on input line 54.
+LaTeX Info: Redefining \microtypecontext on input line 77.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -833,21 +872,22 @@ File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
+Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
 
 (/usr/local/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count138
-\scratchdimen=\dimen148
-\scratchbox=\box31
-\nofMPsegments=\count139
-\nofMParguments=\count140
-\everyMPshowfont=\toks28
-\MPscratchCnt=\count141
-\MPscratchDim=\dimen149
-\MPnumerator=\count142
-\makeMPintoPDFobject=\count143
-\everyMPtoPDFconversion=\toks29
+\scratchcounter=\count146
+\scratchdimen=\dimen152
+\scratchbox=\box33
+\nofMPsegments=\count147
+\nofMParguments=\count148
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count149
+\MPscratchDim=\dimen153
+\MPnumerator=\count150
+\makeMPintoPDFobject=\count151
+\everyMPtoPDFconversion=\toks30
 ) (/usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -863,14 +903,15 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
+\c@lstlisting=\count152
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 57.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 80.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 57.
+LaTeX Font Info:    Try loading font information for U+msa on input line 80.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -878,7 +919,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2016/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 57.
+LaTeX Font Info:    Try loading font information for U+msb on input line 80.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -887,8 +928,8 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 57.
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 57.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 80.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 80.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
@@ -898,40 +939,34 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 63.
-
-
-LaTeX Warning: Reference `sec:risk' on page 1 undefined on input line 70.
-
-[1
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 86.
+ [1
 
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 124.
 
-LaTeX Warning: Reference `sec:taxi' on page 2 undefined on input line 73.
-
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 101.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 101.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 124.
  [2] [3]
-<../paper_figs/value_iteration.png, id=143, 1156.32pt x 1156.32pt>
+<../paper_figs/value_iteration.png, id=142, 1156.32pt x 1156.32pt>
 File: ../paper_figs/value_iteration.png Graphic file (type png)
 
 <use ../paper_figs/value_iteration.png>
 Package pdftex.def Info: ../paper_figs/value_iteration.png used on input line 1
-67.
+90.
 (pdftex.def)             Requested size: 158.99156pt x 158.99008pt.
 
-<../paper_figs/q_value_iteration_simple.png, id=145, 1156.32pt x 1156.32pt>
+<../paper_figs/q_value_iteration_simple.png, id=144, 1156.32pt x 1156.32pt>
 File: ../paper_figs/q_value_iteration_simple.png Graphic file (type png)
 
 <use ../paper_figs/q_value_iteration_simple.png>
 Package pdftex.def Info: ../paper_figs/q_value_iteration_simple.png used on inp
-ut line 168.
+ut line 191.
 (pdftex.def)             Requested size: 158.99156pt x 158.99008pt.
  [4 <../paper_figs/value_iteration.png> <../paper_figs/q_value_iteration_simple
 .png>] [5pdfTeX warning (ext4): destination with the same identifier (name{equa
@@ -939,20 +974,142 @@ tion.4.18}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.213 \begin{equation}
+l.236 \begin{equation}
                       pdfTeX warning (ext4): destination with the same identifi
 er (name{equation.4.18}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.213 \begin{equation}
+l.236 \begin{equation}
                       ]
+<../paper_figs/prospect_neutral.png, id=185, 421.575pt x 277.035pt>
+File: ../paper_figs/prospect_neutral.png Graphic file (type png)
 
-LaTeX Warning: Reference `mdp' on page 6 undefined on input line 277.
+<use ../paper_figs/prospect_neutral.png>
+Package pdftex.def Info: ../paper_figs/prospect_neutral.png used on input line 
+269.
+(pdftex.def)             Requested size: 99.37125pt x 65.29768pt.
 
-[6]
-LaTeX Font Info:    Try loading font information for T1+phv on input line 303.
- (/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/t1phv.fd
+<../paper_figs/prospect_low.png, id=186, 421.575pt x 277.035pt>
+File: ../paper_figs/prospect_low.png Graphic file (type png)
+
+<use ../paper_figs/prospect_low.png>
+Package pdftex.def Info: ../paper_figs/prospect_low.png used on input line 270.
+
+(pdftex.def)             Requested size: 99.37125pt x 65.29768pt.
+
+<../paper_figs/prospect_mid.png, id=187, 421.575pt x 277.035pt>
+File: ../paper_figs/prospect_mid.png Graphic file (type png)
+
+<use ../paper_figs/prospect_mid.png>
+Package pdftex.def Info: ../paper_figs/prospect_mid.png used on input line 271.
+
+(pdftex.def)             Requested size: 99.37125pt x 65.29768pt.
+
+<../paper_figs/prospect_high.png, id=188, 421.575pt x 277.035pt>
+File: ../paper_figs/prospect_high.png Graphic file (type png)
+
+<use ../paper_figs/prospect_high.png>
+Package pdftex.def Info: ../paper_figs/prospect_high.png used on input line 272
+.
+(pdftex.def)             Requested size: 99.37125pt x 65.29768pt.
+
+<../paper_figs/policy_neutral.png, id=189, 2312.64pt x 1445.4pt>
+File: ../paper_figs/policy_neutral.png Graphic file (type png)
+
+<use ../paper_figs/policy_neutral.png>
+Package pdftex.def Info: ../paper_figs/policy_neutral.png used on input line 27
+9.
+(pdftex.def)             Requested size: 178.86702pt x 111.77473pt.
+
+<../paper_figs/policy_low.png, id=190, 2312.64pt x 1445.4pt>
+File: ../paper_figs/policy_low.png Graphic file (type png)
+
+<use ../paper_figs/policy_low.png>
+Package pdftex.def Info: ../paper_figs/policy_low.png used on input line 280.
+(pdftex.def)             Requested size: 178.86702pt x 111.77473pt.
+
+<../paper_figs/policy_mid.png, id=191, 2312.64pt x 1445.4pt>
+File: ../paper_figs/policy_mid.png Graphic file (type png)
+
+<use ../paper_figs/policy_mid.png>
+Package pdftex.def Info: ../paper_figs/policy_mid.png used on input line 281.
+(pdftex.def)             Requested size: 178.86702pt x 111.77473pt.
+
+<../paper_figs/policy_high.png, id=192, 2312.64pt x 1445.4pt>
+File: ../paper_figs/policy_high.png Graphic file (type png)
+
+<use ../paper_figs/policy_high.png>
+Package pdftex.def Info: ../paper_figs/policy_high.png used on input line 282.
+(pdftex.def)             Requested size: 178.86702pt x 111.77473pt.
+ [6] [7 <../paper_figs/prospect_neutral.png> <../paper_figs/prospect_low.png> <
+../paper_figs/prospect_mid.png> <../paper_figs/prospect_high.png> <../paper_fig
+s/policy_neutral.png> <../paper_figs/policy_low.png> <../paper_figs/policy_mid.
+png> <../paper_figs/policy_high.png>]
+(./Tanner_Fiez_Project.bbl
+Underfull \vbox (badness 1270) has occurred while \output is active []
+
+ [8])
+[9]
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 331.
+pdfTeX warning (ext4): destination with the same identifier (name{section.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.335 \section{Implementation Details}
+                                      \label{imp_appendix}
+Underfull \vbox (badness 4819) has occurred while \output is active []
+
+ [10]pdfTeX warning (ext4): destination with the same identifier (name{section.
+2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.425 ...n{Risk-Sensitive Decision Making Example}
+                                                  \label{example}pdfTeX warning
+ (ext4): destination with the same identifier (name{section.3}) has been alread
+y used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.428 ...Bellman Optimality Conditions Derivation}
+                                                  \label{bellman} [11]pdfTeX wa
+rning (ext4): destination with the same identifier (name{section.4}) has been a
+lready used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.447 \section{Model Based RL Algorithms}
+                                         \label{sec:model_appendix}
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
+put line 449.
+
+Underfull \hbox (badness 10000) in paragraph at lines 465--467
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [12]pdfTeX warning (ext4): destination with the same identifier (name{section.
+5}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.533 \section{Model Free RL Algorithms}
+                                        \label{sec:model_free_appendix}
+[13]pdfTeX warning (ext4): destination with the same identifier (name{section.6
+}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.598 ...on{Risk-Sensitive Reinforcement Learning}
+                                                  \label{sec:risk_appendix}pdfT
+eX warning (ext4): destination with the same identifier (name{section.7}) has b
+een already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.621 \section{Taxi MDP Model Description}
+                                          \label{mdp}
+LaTeX Font Info:    Try loading font information for T1+phv on input line 631.
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 Package microtype Info: Loading generic settings for font family
@@ -963,150 +1120,72 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             `cmss' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [7]
-Overfull \hbox (31.08902pt too wide) detected at line 341
+ [14]
+Overfull \hbox (31.08902pt too wide) detected at line 669
 \OMS/cmsy/m/n/10 P\OT1/cmr/m/n/10 ((\OML/cmm/m/it/10 i; \OT1/cmss/m/n/10 f\OML/
 cmm/m/it/10 ; r\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; u; \OT1/cmr/m/n/10 (\OML/cmm
 /m/it/10 j; \OT1/cmss/m/n/10 e\OML/cmm/m/it/10 ; r[]\OT1/cmr/m/n/10 )) = []
  []
 
 
-Overfull \hbox (11.83792pt too wide) detected at line 361
-\OML/cmm/m/it/10 R\OT1/cmr/m/n/10 ((\OML/cmm/m/it/10 i; \OT1/cmss/m/n/10 f\OML/
+Overfull \hbox (11.83792pt too wide) detected at line 691
+\OML/cmm/m/it/10 R\OT1/cmr/m/n/10 ((\OML/cmm/m/it/10 i; \OT1/cmss/m/n/10 e\OML/
 cmm/m/it/10 ; r\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; u; \OT1/cmr/m/n/10 (\OML/cmm
-/m/it/10 j; \OT1/cmss/m/n/10 e\OML/cmm/m/it/10 ; r[]\OT1/cmr/m/n/10 )) = []
+/m/it/10 j; \OT1/cmss/m/n/10 f\OML/cmm/m/it/10 ; r[]\OT1/cmr/m/n/10 )) = []
  []
 
-(./Tanner_Fiez_Project.bbl [8]) [9]
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 377.
-pdfTeX warning (ext4): destination with the same identifier (name{section.1}) h
-as been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.382 ...n{Risk-Sensitive Decision Making Example}
-                                                  \label{example}pdfTeX warning
- (ext4): destination with the same identifier (name{section.2}) has been alread
-y used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.385 ...Bellman Optimality Conditions Derivation}
-                                                  \label{bellman}pdfTeX warning
- (ext4): destination with the same identifier (name{section.3}) has been alread
-y used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.404 \section{Model Based RL Algorithms}
-                                         \label{sec:model_appendix}
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 406.
-pdfTeX warning (ext4): destination with the same identifier (name{section.4}) h
-as been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.429 \section{Model Based RL Experiments}
-                                          \label{sec:model_exp_appendix}pdfTeX 
-warning (ext4): destination with the same identifier (name{section.5}) has been
- already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.431 \section{Model Free RL Algorithms}
-                                        \label{sec:model_free_appendix}pdfTeX w
-arning (ext4): destination with the same identifier (name{section.6}) has been 
-already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.434 \section{Model Free RL Experiments}
-                                         \label{sec:model_free_exp_appendix}
-[10]
-
-Package natbib Warning: Citation `mazumdar:2017aa' on page 11 undefined on inpu
-t line 462.
-
-<../paper_figs/Episode_Returns.png, id=227, 421.575pt x 277.035pt>
-File: ../paper_figs/Episode_Returns.png Graphic file (type png)
-
-<use ../paper_figs/Episode_Returns.png>
-Package pdftex.def Info: ../paper_figs/Episode_Returns.png used on input line 4
-84.
-(pdftex.def)             Requested size: 131.17076pt x 86.19699pt.
-
-<../paper_figs/Epsilon_Parameters.png, id=228, 421.575pt x 277.035pt>
-File: ../paper_figs/Epsilon_Parameters.png Graphic file (type png)
-
-<use ../paper_figs/Epsilon_Parameters.png>
-Package pdftex.def Info: ../paper_figs/Epsilon_Parameters.png used on input lin
-e 485.
-(pdftex.def)             Requested size: 131.17076pt x 86.19699pt.
-
-<../paper_figs/State_Step_Choices.png, id=229, 421.575pt x 277.035pt>
-File: ../paper_figs/State_Step_Choices.png Graphic file (type png)
-
-<use ../paper_figs/State_Step_Choices.png>
-Package pdftex.def Info: ../paper_figs/State_Step_Choices.png used on input lin
-e 486.
-(pdftex.def)             Requested size: 131.17076pt x 86.19699pt.
- [11]
-
-Package natbib Warning: There were undefined citations.
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 591.
-[12 <../paper_figs/Episode_Returns.png> <../paper_figs/Epsilon_Parameters.png> 
-<../paper_figs/State_Step_Choices.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 591.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 696.
+[15]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 696.
  (./Tanner_Fiez_Project.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 591.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 591.
-
-
-Package rerunfilecheck Warning: File `Tanner_Fiez_Project.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `Tanner_Fiez_Project.out':
-(rerunfilecheck)             Before: 9A543F95FF2637A2EC2C1E0DA13F8590;1263
-(rerunfilecheck)             After:  7539E18655444C444B9004ED9F73CCF6;2027.
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 591.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 696.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 696.
+Package rerunfilecheck Info: File `Tanner_Fiez_Project.out' has not changed.
+(rerunfilecheck)             Checksum: 5670CF72125CCC9734CE88547E4FD5EE;1149.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 696.
  ) 
 Here is how much of TeX's memory you used:
- 11180 strings out of 493014
- 169051 string characters out of 6133351
- 289297 words of memory out of 5000000
- 14281 multiletter control sequences out of 15000+600000
- 62282 words of font info for 175 fonts, out of 8000000 for 9000
+ 13188 strings out of 493014
+ 196104 string characters out of 6133351
+ 368599 words of memory out of 5000000
+ 16178 multiletter control sequences out of 15000+600000
+ 62573 words of font info for 178 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 44i,20n,49p,1570b,430s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/t
-exlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/tex
-live/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texl
-ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texli
-ve/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive
-/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2
-016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/201
-6/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2016/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2016/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2016/texmf
--dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2016/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2016/texmf-dist
-/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2016/texmf-
-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2016/te
-xmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2016/texm
-f-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/local/texlive/2016/texmf-
-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2016/texmf-dist/fo
-nts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/
-urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/
-utmri8a.pfb>
-Output written on Tanner_Fiez_Project.pdf (12 pages, 509589 bytes).
+ 44i,20n,49p,1879b,1262s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{Hfootnote.3} has been referenced but does not exi
+st, replaced by a fixed one
+
+pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist
+, replaced by a fixed one
+
+pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist
+, replaced by a fixed one
+
+{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/tex
+live/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texli
+ve/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texliv
+e/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive
+/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2
+016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/201
+6/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2016/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2016/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2016/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2016/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2016/texmf-dist/f
+onts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2016/texmf-di
+st/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2016/texm
+f-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2016/texmf-
+dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/local/texlive/2016/texmf-di
+st/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2016/texmf-dist/font
+s/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/ur
+w/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/ut
+mri8a.pfb>
+Output written on Tanner_Fiez_Project.pdf (15 pages, 904190 bytes).
 PDF statistics:
- 336 PDF objects out of 1000 (max. 8388607)
- 290 compressed objects within 3 object streams
- 87 named destinations out of 1000 (max. 500000)
- 33458 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 459 PDF objects out of 1000 (max. 8388607)
+ 399 compressed objects within 4 object streams
+ 165 named destinations out of 1000 (max. 500000)
+ 33475 words of extra memory for PDF output out of 35830 (max. 10000000)
 

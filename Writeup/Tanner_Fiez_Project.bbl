@@ -1,4 +1,4 @@
-\begin{thebibliography}{7}
+\begin{thebibliography}{9}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -37,11 +37,21 @@ Herbert Robbins and Sutton Monro.
 \newblock A stochastic approximation method.
 \newblock \emph{The annals of mathematical statistics}, pages 400--407, 1951.
 
+\bibitem[Tsitsiklis(1994)]{tsitsiklis1994asynchronous}
+John~N Tsitsiklis.
+\newblock Asynchronous stochastic approximation and q-learning.
+\newblock \emph{Machine learning}, 16\penalty0 (3):\penalty0 185--202, 1994.
+
 \bibitem[Tversky and Kahneman(1992)]{tversky1992advances}
 Amos Tversky and Daniel Kahneman.
 \newblock Advances in prospect theory: Cumulative representation of
   uncertainty.
 \newblock \emph{Journal of Risk and uncertainty}, 5\penalty0 (4):\penalty0
   297--323, 1992.
+
+\bibitem[Ratliff and Mazumdar(2017)]{DBLP:journals/corr/RatliffM17}
+Lillian~J. Ratliff and Eric Mazumdar.
+\newblock Risk-sensitive inverse reinforcement learning via gradient methods.
+\newblock \emph{CoRR}, abs/1703.09842, 2017.
 
 \end{thebibliography}
